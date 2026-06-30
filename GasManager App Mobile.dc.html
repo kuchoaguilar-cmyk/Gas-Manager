@@ -1,0 +1,838 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0}
+  @keyframes gmPulse{0%{transform:scale(1);opacity:.55}70%{transform:scale(2.6);opacity:0}100%{opacity:0}}
+  .gm-scroll::-webkit-scrollbar{display:none}
+  .leaflet-container{font-family:'IBM Plex Sans',sans-serif;background:#EAF0FB}
+  .leaflet-control-zoom a{border-radius:0!important}
+</style>
+</helmet>
+
+<div style="min-height:100vh;background:#e7e5df;display:flex;justify-content:center;align-items:flex-start;padding:44px 24px;font-family:'IBM Plex Sans',sans-serif">
+  <x-import component="IOSDevice" from="./ios-frame.jsx" width="{{ 402 }}" height="{{ 874 }}" hint-size="402px,874px">
+
+    <div style="position:relative;height:100%;background:#F4F7FC;color:#0F1B2D;display:flex;flex-direction:column">
+
+      <!-- ===== HEADER ===== -->
+      <div style="flex:none;background:#fff;border-bottom:1px solid #E7EDF6;padding:50px 18px 12px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:13px">
+          <div style="display:flex;align-items:center;gap:9px">
+            <svg width="30" height="30" viewBox="0 0 34 34" fill="none"><rect width="34" height="34" rx="9" fill="#0B3D91"/><path d="M17 7s6 4.4 6 9.8a6 6 0 1 1-12 0c0-2 .9-3.6 2-4.6.1 1.3.9 2.1 1.9 2.1.2-3 2.1-5.4 2.1-7.3Z" fill="#fff"/><circle cx="17" cy="19.2" r="2.5" fill="#0B3D91"/></svg>
+            <div><div style="font:800 15px/1 'Archivo',sans-serif;letter-spacing:-.01em">Gas<span style="color:#0B3D91">Manager</span></div><div style="font:400 10px/1.3 'IBM Plex Sans';color:#8593A8;margin-top:2px">{{ org }}</div></div>
+          </div>
+          <div style="position:relative;width:36px;height:36px;border-radius:10px;background:#F4F7FC;display:flex;align-items:center;justify-content:center">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#5A6B82" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3a4.5 4.5 0 0 0-4.5 4.5c0 4-1.5 5-1.5 5h12s-1.5-1-1.5-5A4.5 4.5 0 0 0 10 3ZM8.5 16a1.6 1.6 0 0 0 3 0"/></svg>
+            <span style="position:absolute;top:6px;right:7px;width:8px;height:8px;border-radius:50%;background:#D98A0B;border:1.5px solid #fff"></span>
+          </div>
+        </div>
+        <!-- plan selector -->
+        <div style="display:flex;align-items:center;gap:7px">
+          <span style="font:500 11px/1 'IBM Plex Sans';color:#8593A8;flex:none">Plan</span>
+          <div style="display:flex;flex:1;padding:3px;border-radius:9px;background:#EFF3FA;border:1px solid #E2E9F4">
+            <button onClick="{{ seg.ind.onClick }}" style="flex:1;height:30px;border:none;border-radius:6px;cursor:pointer;font:600 11px/1 'IBM Plex Sans';background:{{ seg.ind.bg }};color:{{ seg.ind.fg }};box-shadow:{{ seg.ind.sh }}">Indep.</button>
+            <button onClick="{{ seg.pro.onClick }}" style="flex:1;height:30px;border:none;border-radius:6px;cursor:pointer;font:600 11px/1 'IBM Plex Sans';background:{{ seg.pro.bg }};color:{{ seg.pro.fg }};box-shadow:{{ seg.pro.sh }}">Profes.</button>
+            <button onClick="{{ seg.emp.onClick }}" style="flex:1;height:30px;border:none;border-radius:6px;cursor:pointer;font:600 11px/1 'IBM Plex Sans';background:{{ seg.emp.bg }};color:{{ seg.emp.fg }};box-shadow:{{ seg.emp.sh }}">Empresa</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===== SCROLL CONTENT ===== -->
+      <div class="gm-scroll" style="flex:1;overflow-y:auto;overflow-x:hidden">
+
+        <!-- ======== MAPA ======== -->
+        <sc-if value="{{ isMapa }}" hint-placeholder-val="{{ true }}">
+          <div style="padding:14px 16px 20px">
+            <!-- region navigator -->
+            <div style="display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:9px" class="gm-scroll">
+              <sc-for list="{{ regionNav }}" as="r" hint-placeholder-count="6">
+                <button onClick="{{ r.onClick }}" style="flex:none;display:inline-flex;align-items:center;gap:7px;height:32px;padding:0 12px;border:1px solid {{ r.border }};border-radius:9px;cursor:pointer;font:600 12px/1 'IBM Plex Sans';background:{{ r.bg }};color:{{ r.fg }}">{{ r.name }}<span style="font:600 10.5px/1 'IBM Plex Sans';color:{{ r.countColor }}">{{ r.count }}</span></button>
+              </sc-for>
+            </div>
+            <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px" class="gm-scroll">
+              <sc-for list="{{ filters }}" as="c" hint-placeholder-count="5">
+                <button onClick="{{ c.onClick }}" style="flex:none;height:32px;padding:0 13px;border:1px solid {{ c.border }};border-radius:18px;cursor:pointer;font:600 12px/1 'IBM Plex Sans';background:{{ c.bg }};color:{{ c.fg }}">{{ c.label }}</button>
+              </sc-for>
+            </div>
+            <!-- real Leaflet map -->
+            <div style="border:1px solid #E7EDF6;border-radius:14px;overflow:hidden;background:#fff;margin-bottom:14px">
+              <div style="position:relative;height:300px;background:#EAF0FB">
+                <div ref="{{ mapRef }}" style="position:absolute;inset:0;width:100%;height:100%"></div>
+                <div style="position:absolute;left:10px;bottom:10px;z-index:500;display:flex;flex-wrap:wrap;gap:8px;background:rgba(255,255,255,.94);border:1px solid #E4EAF4;border-radius:9px;padding:7px 10px;max-width:240px">
+                  <span style="display:flex;align-items:center;gap:5px;font:500 10.5px/1 'IBM Plex Sans';color:#3A475C"><span style="width:8px;height:8px;border-radius:50%;background:#1A8F5B"></span>Vigente</span>
+                  <span style="display:flex;align-items:center;gap:5px;font:500 10.5px/1 'IBM Plex Sans';color:#3A475C"><span style="width:8px;height:8px;border-radius:50%;background:#D98A0B"></span>Por vencer</span>
+                  <span style="display:flex;align-items:center;gap:5px;font:500 10.5px/1 'IBM Plex Sans';color:#3A475C"><span style="width:8px;height:8px;border-radius:50%;background:#C0392B"></span>Vencida</span>
+                  <span style="display:flex;align-items:center;gap:5px;font:500 10.5px/1 'IBM Plex Sans';color:#3A475C"><span style="width:8px;height:8px;border-radius:50%;background:#7C3AED"></span>Recert.</span>
+                </div>
+              </div>
+            </div>
+            <!-- detail card -->
+            <div style="border:1px solid #E7EDF6;border-radius:14px;background:#fff;overflow:hidden">
+              <div style="padding:15px 16px 14px;border-bottom:1px solid #EDF1F8">
+                <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px">
+                  <div><div style="font:700 15px/1.2 'Archivo',sans-serif">{{ sel.cliente }}</div><div style="font:400 12px/1.3 'IBM Plex Sans';color:#5A6B82;margin-top:4px">{{ sel.direccion }} · {{ sel.comuna }}</div></div>
+                  <span style="flex:none;display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:999px;background:#F4F7FC;font:600 11px/1 'IBM Plex Sans';color:{{ sel.statusColor }}"><span style="width:7px;height:7px;border-radius:50%;background:{{ sel.statusColor }}"></span>{{ sel.statusLabel }}</span>
+                </div>
+                <div style="display:flex;gap:8px;margin-top:12px">
+                  <div style="flex:1;background:#F7FAFE;border:1px solid #EAF0F8;border-radius:9px;padding:9px 10px"><div style="font:400 10px/1 'IBM Plex Sans';color:#8593A8;margin-bottom:5px">Tipo</div><div style="font:600 12px/1 'IBM Plex Sans'">{{ sel.tipo }}</div></div>
+                  <div style="flex:1;background:#F7FAFE;border:1px solid #EAF0F8;border-radius:9px;padding:9px 10px"><div style="font:400 10px/1 'IBM Plex Sans';color:#8593A8;margin-bottom:5px">Certificada</div><div style="font:600 12px/1 'IBM Plex Sans'">{{ sel.cert }}</div></div>
+                  <div style="flex:1;background:#F7FAFE;border:1px solid #EAF0F8;border-radius:9px;padding:9px 10px"><div style="font:400 10px/1 'IBM Plex Sans';color:#8593A8;margin-bottom:5px">Vence</div><div style="font:600 12px/1 'IBM Plex Sans'">{{ sel.vence }}</div></div>
+                </div>
+              </div>
+              <div style="padding:14px 16px">
+                <div style="font:400 12.5px/1.45 'IBM Plex Sans';color:#48566B;margin-bottom:13px">{{ sel.venceText }}</div>
+
+                <!-- ===== Contacto del cliente ===== -->
+                <div style="border:1px solid #EAF0F8;border-radius:11px;padding:11px 12px;margin-bottom:13px">
+                  <div style="display:flex;align-items:center;gap:10px">
+                    <div style="flex:none;width:36px;height:36px;border-radius:50%;background:#EAF0FB;color:#0B3D91;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="7" r="3"/><path d="M4 16.5c0-3 2.7-4.5 6-4.5s6 1.5 6 4.5"/></svg></div>
+                    <div style="flex:1;min-width:0"><div style="font:600 12.5px/1.2 'IBM Plex Sans';color:#1F2D40">{{ sel.contactNombre }}</div><div style="font:400 11px/1.3 'IBM Plex Sans';color:#8593A8;margin-top:2px">{{ sel.contactTel }}</div></div>
+                    <sc-if value="{{ sel.hasContact }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:flex;gap:7px">
+                        <a href="{{ sel.telHref }}" title="Llamar" style="width:36px;height:36px;border-radius:9px;background:#EAF0FB;display:flex;align-items:center;justify-content:center;text-decoration:none"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#0B3D91" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 3h3l1.5 4-2 1.2a10 10 0 0 0 4.3 4.3l1.2-2 4 1.5v3a1 1 0 0 1-1.1 1A14 14 0 0 1 4 4.1 1 1 0 0 1 5 3Z"/></svg></a>
+                        <a href="{{ sel.waHref }}" target="_blank" title="WhatsApp" style="width:36px;height:36px;border-radius:9px;background:#E7F6EC;display:flex;align-items:center;justify-content:center;text-decoration:none"><svg width="17" height="17" viewBox="0 0 24 24" fill="#1A8F5B"><path d="M12 2a10 10 0 0 0-8.6 15l-1.3 4.7 4.8-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.8.7.7-2.7-.2-.3A8 8 0 1 1 12 20Zm4.5-5.9c-.2-.1-1.4-.7-1.7-.8s-.4-.1-.5.1-.6.8-.8 1-.3.2-.5.1a6.5 6.5 0 0 1-1.9-1.2 7.2 7.2 0 0 1-1.3-1.7c-.1-.2 0-.4.1-.5l.4-.4.2-.4a.5.5 0 0 0 0-.4c0-.1-.5-1.3-.7-1.7s-.4-.4-.5-.4h-.5a.9.9 0 0 0-.7.3 2.8 2.8 0 0 0-.9 2.1 4.9 4.9 0 0 0 1 2.6 11.2 11.2 0 0 0 4.3 3.8c.6.3 1.1.4 1.5.5a3.5 3.5 0 0 0 1.6.1 2.6 2.6 0 0 0 1.7-1.2 2.1 2.1 0 0 0 .2-1.2c-.1-.1-.3-.2-.5-.3Z"/></svg></a>
+                        <a href="{{ sel.mailHref }}" title="Email" style="width:36px;height:36px;border-radius:9px;background:#EAF0FB;display:flex;align-items:center;justify-content:center;text-decoration:none"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#0B3D91" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="4.5" width="15" height="11" rx="2"/><path d="m3 6 7 5 7-5"/></svg></a>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ sel.noContact }}" hint-placeholder-val="{{ false }}">
+                      <button style="height:32px;padding:0 11px;border:1px solid #CDD9EE;background:#fff;border-radius:8px;font:600 11px/1 'IBM Plex Sans';color:#0B3D91;cursor:pointer">+ Agregar</button>
+                    </sc-if>
+                  </div>
+                </div>
+
+                <!-- ===== Documentación SEC: trámite + memoria de cálculo ===== -->
+                <div style="border:1px solid #EAF0F8;border-radius:11px;overflow:hidden;margin-bottom:13px">
+                  <div style="display:flex;align-items:center;gap:9px;padding:10px 12px;background:#F7FAFE;border-bottom:1px solid #EAF0F8">
+                    <span style="flex:none;display:inline-flex;align-items:center;justify-content:center;height:22px;padding:0 8px;border-radius:6px;background:#0B3D91;color:#fff;font:700 11px/1 'Archivo',sans-serif">{{ sel.tramiteCode }}</span>
+                    <div style="font:600 11.5px/1.3 'IBM Plex Sans';color:#1F2D40">{{ sel.tramiteNombre }}</div>
+                  </div>
+                  <div style="padding:12px">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+                      <div style="display:flex;align-items:flex-start;gap:9px">
+                        <svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="#5A6B82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px"><path d="M5 2.5h7l3 3V17a.5.5 0 0 1-.5.5h-9A.5.5 0 0 1 5 17V2.5Z"/><path d="M7.5 9.5h5M7.5 12.5h5M7.5 6.5h2.5"/></svg>
+                        <div><div style="font:600 12px/1.2 'IBM Plex Sans';color:#1F2D40">Memoria de cálculo</div><div style="font:400 10.5px/1.3 'IBM Plex Sans';color:#8593A8;margin-top:3px">{{ sel.memoriaSub }}</div></div>
+                      </div>
+                      <sc-if value="{{ sel.memoriaPresentada }}" hint-placeholder-val="{{ true }}">
+                        <span style="flex:none;display:inline-flex;align-items:center;gap:5px;padding:5px 9px;border-radius:999px;background:#ECF6F0;font:600 10.5px/1 'IBM Plex Sans';color:#15734A"><span style="width:6px;height:6px;border-radius:50%;background:#1A8F5B"></span>Presentada</span>
+                      </sc-if>
+                      <sc-if value="{{ sel.memoriaPendiente }}" hint-placeholder-val="{{ false }}">
+                        <button onClick="{{ sel.onAttachMemoria }}" style="flex:none;display:flex;align-items:center;gap:5px;height:32px;padding:0 11px;border:none;border-radius:8px;background:#0B3D91;color:#fff;font:600 11px/1 'IBM Plex Sans';cursor:pointer"><svg width="13" height="13" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4v12M4 10h12"/></svg>Adjuntar</button>
+                      </sc-if>
+                    </div>
+                    <sc-if value="{{ sel.memoriaPendiente }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;align-items:flex-start;gap:8px;margin-top:11px;background:#FBF7EE;border:1px solid #EFE2C6;border-radius:9px;padding:9px 11px">
+                        <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="#B9821B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px"><path d="M10 6.5v4M10 13.5h.01M10 2.5 18 17H2L10 2.5Z"/></svg>
+                        <div style="font:500 11px/1.45 'IBM Plex Sans';color:#7A5C16">Sin la memoria de cálculo no puede certificarse en e-Declarador.</div>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+
+                <button style="display:flex;align-items:center;justify-content:center;gap:7px;width:100%;height:42px;border:1.5px solid #CDD9EE;background:#fff;border-radius:10px;font:600 13px/1 'IBM Plex Sans';color:#0B3D91;cursor:pointer;margin-bottom:10px">
+                  <svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h7l3 3V17a.5.5 0 0 1-.5.5h-9A.5.5 0 0 1 5 17V2.5Z"/><path d="M7.5 10h5M7.5 13h5"/></svg>
+                  Ver certificado (PDF)
+                </button>
+                <sc-if value="{{ sel.needsAction }}" hint-placeholder-val="{{ false }}">
+                  <div style="border-top:1px solid #EDF1F8;margin-top:4px;padding-top:13px">
+                    <sc-if value="{{ sel.canAgenda }}" hint-placeholder-val="{{ true }}">
+                      <sc-if value="{{ sel.notScheduled }}" hint-placeholder-val="{{ true }}">
+                        <div style="font:600 12px/1 'IBM Plex Sans';color:#0B3D91;margin-bottom:9px">Agendar visita de recertificación</div>
+                        <div style="display:flex;gap:7px">
+                          <sc-for list="{{ sel.dateChips }}" as="d" hint-placeholder-count="3">
+                            <button onClick="{{ d.onPick }}" style="flex:1;height:40px;border:1.5px solid #CDD9EE;background:#fff;border-radius:9px;font:600 11.5px/1 'IBM Plex Sans';color:#0B3D91;cursor:pointer">{{ d.label }}</button>
+                          </sc-for>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ sel.scheduled }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;background:#ECF6F0;border:1px solid #CDE9D9;border-radius:10px;padding:11px 13px">
+                          <div style="display:flex;align-items:center;gap:8px;font:600 12.5px/1.3 'IBM Plex Sans';color:#15734A"><span style="display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;border-radius:50%;background:#1A8F5B;color:#fff;font-size:12px">✓</span>Agendada · {{ sel.scheduledDate }}</div>
+                          <button onClick="{{ sel.reschedule }}" style="background:none;border:none;font:600 11px/1 'IBM Plex Sans';color:#5A6B82;cursor:pointer;text-decoration:underline">Cambiar</button>
+                        </div>
+                      </sc-if>
+                    </sc-if>
+                    <sc-if value="{{ sel.lockAgenda }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;align-items:center;gap:10px;background:#FBF7EE;border:1px solid #EFE2C6;border-radius:10px;padding:11px 13px">
+                        <svg width="17" height="17" viewBox="0 0 16 16" fill="none" stroke="#B9821B" stroke-width="1.5"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>
+                        <div style="flex:1;font:500 11.5px/1.4 'IBM Plex Sans';color:#7A5C16">Agendar visitas está en el plan <b>Profesional</b>.</div>
+                        <button onClick="{{ upgradePro }}" style="flex:none;height:32px;padding:0 11px;border:none;border-radius:8px;background:#0B3D91;color:#fff;font:600 11px/1 'IBM Plex Sans';cursor:pointer">Mejorar</button>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ sel.alDia }}" hint-placeholder-val="{{ false }}">
+                  <div style="border-top:1px solid #EDF1F8;margin-top:4px;padding-top:13px;display:flex;align-items:center;gap:8px;font:600 12.5px/1.3 'IBM Plex Sans';color:#15734A"><span style="width:8px;height:8px;border-radius:50%;background:#1A8F5B"></span>Certificación al día. Sin acción requerida.</div>
+                </sc-if>
+                <div style="border-top:1px solid #EDF1F8;margin-top:13px;padding-top:13px">
+                  <sc-if value="{{ sel.canHistorial }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+                      <div style="font:600 12px/1 'IBM Plex Sans';color:#0F1B2D">Historial de modificaciones</div>
+                      <button onClick="{{ sel.onRegisterMod }}" style="height:28px;padding:0 10px;border:1px solid #CDD9EE;background:#fff;border-radius:8px;font:600 11px/1 'IBM Plex Sans';color:#0B3D91;cursor:pointer">+ Registrar</button>
+                    </div>
+                    <sc-if value="{{ sel.hasMods }}" hint-placeholder-val="{{ false }}">
+                      <sc-for list="{{ sel.mods }}" as="m" hint-placeholder-count="1">
+                        <div style="display:flex;gap:9px;padding:8px 0;border-bottom:1px solid #F2F5FA">
+                          <span style="flex:none;margin-top:4px;width:7px;height:7px;border-radius:50%;background:#7C3AED"></span>
+                          <div><div style="font:500 12px/1.3 'IBM Plex Sans';color:#33414F">{{ m.detalle }}</div><div style="font:400 10.5px/1.2 'IBM Plex Sans';color:#8593A8;margin-top:2px">{{ m.fecha }} · obliga a recertificar</div></div>
+                        </div>
+                      </sc-for>
+                    </sc-if>
+                    <sc-if value="{{ sel.noMods }}" hint-placeholder-val="{{ true }}">
+                      <div style="font:400 11.5px/1.4 'IBM Plex Sans';color:#8593A8">Sin modificaciones. Si modificas la instalación tras certificar, se reinicia el proceso de certificación.</div>
+                    </sc-if>
+                  </sc-if>
+                  <sc-if value="{{ sel.lockHistorial }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;align-items:center;gap:10px">
+                      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" stroke="#9AA7BA" stroke-width="1.5"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg>
+                      <div style="font:500 11.5px/1.4 'IBM Plex Sans';color:#8593A8">El historial de modificaciones está en el plan <b style="color:#5A6B82">Profesional</b>.</div>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ======== INSTALACIONES ======== -->
+        <sc-if value="{{ isInstal }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:14px 16px 20px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px">
+              <div style="flex:1">
+                <div style="font:600 12px/1.3 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">{{ plan.limitLabel }}</div>
+                <sc-if value="{{ plan.showBar }}" hint-placeholder-val="{{ false }}">
+                  <div style="height:7px;border-radius:6px;background:#E7EDF6;overflow:hidden"><div style="height:100%;width:{{ plan.usePct }}%;background:#0B3D91"></div></div>
+                </sc-if>
+              </div>
+            </div>
+            <button onClick="{{ addInstall }}" style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;height:44px;border:none;border-radius:10px;background:#0B3D91;color:#fff;font:600 13.5px/1 'Archivo',sans-serif;cursor:pointer;margin-bottom:14px">+ Nueva instalación</button>
+            <sc-if value="{{ capMsg }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:11px;background:#FBF7EE;border:1px solid #EFE2C6;border-radius:11px;padding:14px;margin-bottom:14px">
+                <div style="display:flex;align-items:flex-start;gap:10px"><svg width="18" height="18" viewBox="0 0 16 16" fill="none" stroke="#B9821B" stroke-width="1.5" style="flex:none;margin-top:1px"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg><div style="font:500 12.5px/1.4 'IBM Plex Sans';color:#7A5C16">Alcanzaste el límite de 25 instalaciones del plan Independiente. Mejora a Profesional para instalaciones ilimitadas.</div></div>
+                <button onClick="{{ upgradePro }}" style="height:38px;border:none;border-radius:8px;background:#0B3D91;color:#fff;font:600 12.5px/1 'IBM Plex Sans';cursor:pointer">Mejorar plan</button>
+              </div>
+            </sc-if>
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <sc-for list="{{ rows }}" as="r" hint-placeholder-count="6">
+                <button onClick="{{ r.onView }}" style="text-align:left;border:1px solid #E7EDF6;border-radius:12px;background:#fff;padding:14px;cursor:pointer;display:flex;align-items:center;gap:12px">
+                  <span style="flex:none;width:10px;height:10px;border-radius:50%;background:{{ r.color }}"></span>
+                  <div style="flex:1;min-width:0">
+                    <div style="font:600 13.5px/1.2 'IBM Plex Sans';color:#0F1B2D">{{ r.cliente }}</div>
+                    <div style="font:400 11.5px/1.3 'IBM Plex Sans';color:#8593A8;margin-top:3px">{{ r.direccion }} · {{ r.comuna }}</div>
+                    <div style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;margin-top:7px"><span style="display:inline-flex;align-items:center;height:18px;padding:0 6px;border-radius:5px;background:#EAF0FB;color:#0B3D91;font:700 10px/1 'Archivo',sans-serif">{{ r.tramiteCode }}</span><span style="font:600 11px/1 'IBM Plex Sans';color:{{ r.color }}">{{ r.statusLabel }}</span><span style="font:400 11px/1 'IBM Plex Sans';color:#B3C0D4">·</span><span style="font:400 11px/1 'IBM Plex Sans';color:#8593A8">Vence {{ r.vence }}</span><sc-if value="{{ r.memoriaPendiente }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;font:600 10.5px/1 'IBM Plex Sans';color:#B9821B"><svg width="11" height="11" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6.5v4M10 13.5h.01M10 2.5 18 17H2L10 2.5Z"/></svg>Falta memoria</span></sc-if></div>
+                  </div>
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" stroke="#C2CDDD" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex:none"><path d="M8 5l5 5-5 5"/></svg>
+                </button>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+        <!-- ======== AGENDA ======== -->
+        <sc-if value="{{ isAgenda }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ canAgenda }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:14px 16px 20px">
+              <div style="border:1px solid #E7EDF6;border-radius:12px;background:#fff;overflow:hidden;margin-bottom:14px">
+                <div style="padding:13px 15px;border-bottom:1px solid #EDF1F8;font:700 13px/1 'Archivo',sans-serif;display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:#1A8F5B"></span>Agendadas <span style="font:600 10.5px/1 'IBM Plex Sans';color:#8593A8;background:#F1F5FB;padding:3px 8px;border-radius:20px">{{ agenda.scheduledCount }}</span></div>
+                <sc-if value="{{ agenda.hasScheduled }}" hint-placeholder-val="{{ false }}">
+                  <sc-for list="{{ agenda.scheduled }}" as="a" hint-placeholder-count="2">
+                    <div style="display:flex;align-items:center;gap:11px;padding:13px 15px;border-bottom:1px solid #F2F5FA">
+                      <div style="flex:none;width:42px;height:42px;border-radius:10px;background:#EAF0FB;color:#0B3D91;display:flex;flex-direction:column;align-items:center;justify-content:center"><span style="font:800 15px/1 'Archivo',sans-serif">{{ a.day }}</span><span style="font:600 9px/1 'IBM Plex Sans';text-transform:uppercase">{{ a.mon }}</span></div>
+                      <div style="flex:1;min-width:0"><div style="font:600 13px/1.2 'IBM Plex Sans'">{{ a.cliente }}</div><div style="font:400 11.5px/1.2 'IBM Plex Sans';color:#8593A8;margin-top:3px">{{ a.comuna }} · {{ a.tipo }}</div></div>
+                      <button onClick="{{ a.onCancel }}" style="flex:none;height:30px;padding:0 11px;border:1px solid #E2C9C6;background:#fff;border-radius:8px;font:600 11px/1 'IBM Plex Sans';color:#B5453A;cursor:pointer">Cancelar</button>
+                    </div>
+                  </sc-for>
+                </sc-if>
+                <sc-if value="{{ agenda.noScheduled }}" hint-placeholder-val="{{ true }}">
+                  <div style="padding:26px 16px;text-align:center;font:400 12.5px/1.5 'IBM Plex Sans';color:#8593A8">Aún no hay visitas agendadas.</div>
+                </sc-if>
+              </div>
+              <div style="border:1px solid #E7EDF6;border-radius:12px;background:#fff;overflow:hidden">
+                <div style="padding:13px 15px;border-bottom:1px solid #EDF1F8;font:700 13px/1 'Archivo',sans-serif;display:flex;align-items:center;gap:8px"><span style="width:8px;height:8px;border-radius:50%;background:#D98A0B"></span>Pendientes <span style="font:600 10.5px/1 'IBM Plex Sans';color:#8593A8;background:#F1F5FB;padding:3px 8px;border-radius:20px">{{ agenda.pendingCount }}</span></div>
+                <sc-if value="{{ agenda.hasPending }}" hint-placeholder-val="{{ true }}">
+                  <sc-for list="{{ agenda.pending }}" as="a" hint-placeholder-count="3">
+                    <div style="display:flex;align-items:center;gap:11px;padding:13px 15px;border-bottom:1px solid #F2F5FA">
+                      <span style="flex:none;width:9px;height:9px;border-radius:50%;background:{{ a.color }}"></span>
+                      <div style="flex:1;min-width:0"><div style="font:600 13px/1.2 'IBM Plex Sans'">{{ a.cliente }}</div><div style="font:400 11.5px/1.2 'IBM Plex Sans';color:#8593A8;margin-top:3px">{{ a.statusLabel }} · {{ a.comuna }}</div></div>
+                      <button onClick="{{ a.onGo }}" style="flex:none;height:30px;padding:0 12px;border:none;background:#0B3D91;border-radius:8px;font:600 11px/1 'IBM Plex Sans';color:#fff;cursor:pointer">Agendar</button>
+                    </div>
+                  </sc-for>
+                </sc-if>
+                <sc-if value="{{ agenda.noPending }}" hint-placeholder-val="{{ false }}">
+                  <div style="padding:26px 16px;text-align:center;font:400 12.5px/1.5 'IBM Plex Sans';color:#8593A8">Todo al día. No hay pendientes.</div>
+                </sc-if>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ lockAgendaView }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:32px 20px"><div style="text-align:center;border:1px solid #E7EDF6;border-radius:16px;background:#fff;padding:32px 24px">
+              <div style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:15px;background:#EAF0FB;margin-bottom:18px"><svg width="24" height="24" viewBox="0 0 16 16" fill="none" stroke="#0B3D91" stroke-width="1.4"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg></div>
+              <div style="font:800 19px/1.2 'Archivo',sans-serif;margin-bottom:9px">Agenda de visitas</div>
+              <div style="font:400 13px/1.6 'IBM Plex Sans';color:#5A6B82;margin-bottom:20px">Programa y gestiona las visitas de recertificación. Disponible desde el plan <b>Profesional</b>.</div>
+              <button onClick="{{ upgradePro }}" style="width:100%;height:46px;border:none;border-radius:10px;background:#0B3D91;color:#fff;font:600 13.5px/1 'Archivo',sans-serif;cursor:pointer">Mejorar · $29.990/mes</button>
+            </div></div>
+          </sc-if>
+        </sc-if>
+
+        <!-- ======== REPORTES ======== -->
+        <sc-if value="{{ isReportes }}" hint-placeholder-val="{{ false }}">
+          <sc-if value="{{ canReportes }}" hint-placeholder-val="{{ true }}">
+            <div style="padding:14px 16px 20px">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:14px">
+                <div style="border:1px solid #E7EDF6;border-radius:12px;background:#fff;padding:15px"><div style="font:400 11px/1 'IBM Plex Sans';color:#8593A8;margin-bottom:8px">Total</div><div style="font:800 26px/1 'Archivo',sans-serif">{{ counts.total }}</div></div>
+                <div style="border:1px solid #E7EDF6;border-radius:12px;background:#fff;padding:15px"><div style="font:400 11px/1 'IBM Plex Sans';color:#8593A8;margin-bottom:8px">Vigentes</div><div style="font:800 26px/1 'Archivo',sans-serif;color:#1A8F5B">{{ counts.vigente }}</div></div>
+                <div style="border:1px solid #E7EDF6;border-radius:12px;background:#fff;padding:15px"><div style="font:400 11px/1 'IBM Plex Sans';color:#8593A8;margin-bottom:8px">Por vencer</div><div style="font:800 26px/1 'Archivo',sans-serif;color:#D98A0B">{{ counts.porvencer }}</div></div>
+                <div style="border:1px solid #E7EDF6;border-radius:12px;background:#fff;padding:15px"><div style="font:400 11px/1 'IBM Plex Sans';color:#8593A8;margin-bottom:8px">Vencidas / recert</div><div style="font:800 26px/1 'Archivo',sans-serif;color:#C0392B">{{ counts.criticas }}</div></div>
+              </div>
+              <sc-if value="{{ hasMemPend }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:flex-start;gap:10px;background:#FBF7EE;border:1px solid #EFE2C6;border-radius:11px;padding:12px 14px;margin-bottom:14px">
+                  <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#B9821B" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" style="flex:none;margin-top:1px"><path d="M5 2.5h7l3 3V17a.5.5 0 0 1-.5.5h-9A.5.5 0 0 1 5 17V2.5Z"/><path d="M7.5 9.5h5M7.5 12.5h5"/></svg>
+                  <div style="flex:1;font:500 12px/1.4 'IBM Plex Sans';color:#7A5C16"><b>{{ counts.memoriasPend }}</b> instalación(es) con memoria de cálculo pendiente. Sin ella no es posible declarar en e-Declarador.</div>
+                </div>
+              </sc-if>
+              <div style="border:1px solid #E7EDF6;border-radius:12px;background:#fff;padding:18px;margin-bottom:14px">
+                <div style="font:700 13px/1 'Archivo',sans-serif;margin-bottom:14px">Distribución por estado</div>
+                <div style="display:flex;height:14px;border-radius:7px;overflow:hidden;margin-bottom:13px">
+                  <div style="width:{{ dist.vigente }}%;background:#1A8F5B"></div><div style="width:{{ dist.porvencer }}%;background:#D98A0B"></div><div style="width:{{ dist.vencida }}%;background:#C0392B"></div><div style="width:{{ dist.recert }}%;background:#7C3AED"></div>
+                </div>
+                <div style="display:flex;flex-wrap:wrap;gap:10px 16px;font:500 11px/1 'IBM Plex Sans';color:#5A6B82">
+                  <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:#1A8F5B"></span>Vigentes {{ counts.vigente }}</span>
+                  <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:#D98A0B"></span>Por vencer {{ counts.porvencer }}</span>
+                  <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:#C0392B"></span>Vencidas {{ counts.vencida }}</span>
+                  <span style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:#7C3AED"></span>Recert {{ counts.recert }}</span>
+                </div>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <button style="display:flex;align-items:center;justify-content:center;gap:9px;height:46px;border:none;border-radius:10px;background:#0B3D91;color:#fff;font:600 13px/1 'Archivo',sans-serif;cursor:pointer"><svg width="15" height="15" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 3v9M6.5 9l3.5 3 3.5-3M4 16h12"/></svg>Exportar informe (PDF)</button>
+                <button style="height:46px;border:1.5px solid #CDD9EE;border-radius:10px;background:#fff;color:#0B3D91;font:600 13px/1 'Archivo',sans-serif;cursor:pointer">Exportar planilla (CSV)</button>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ lockReportesView }}" hint-placeholder-val="{{ false }}">
+            <div style="padding:32px 20px"><div style="text-align:center;border:1px solid #E7EDF6;border-radius:16px;background:#fff;padding:32px 24px">
+              <div style="display:inline-flex;align-items:center;justify-content:center;width:54px;height:54px;border-radius:15px;background:#EAF0FB;margin-bottom:18px"><svg width="24" height="24" viewBox="0 0 16 16" fill="none" stroke="#0B3D91" stroke-width="1.4"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg></div>
+              <div style="font:800 19px/1.2 'Archivo',sans-serif;margin-bottom:9px">Reportes y exportación</div>
+              <div style="font:400 13px/1.6 'IBM Plex Sans';color:#5A6B82;margin-bottom:20px">Informes consolidados y exportación a PDF/CSV de tu cartera. Disponible desde el plan <b>Profesional</b>.</div>
+              <button onClick="{{ upgradePro }}" style="width:100%;height:46px;border:none;border-radius:10px;background:#0B3D91;color:#fff;font:600 13.5px/1 'Archivo',sans-serif;cursor:pointer">Mejorar · $29.990/mes</button>
+            </div></div>
+          </sc-if>
+        </sc-if>
+
+        <!-- ======== AJUSTES / PLAN ======== -->
+        <sc-if value="{{ isAjustes }}" hint-placeholder-val="{{ false }}">
+          <div style="padding:14px 16px 20px">
+            <div style="font:600 12.5px/1.4 'IBM Plex Sans';color:#5A6B82;margin-bottom:14px">Tu plan define las herramientas disponibles. Cámbialo para ver cómo se adapta la app.</div>
+            <div style="display:flex;flex-direction:column;gap:12px">
+              <sc-for list="{{ planCards }}" as="pc" hint-placeholder-count="3">
+                <div style="position:relative;border:1.5px solid {{ pc.border }};border-radius:14px;background:#fff;padding:20px 18px;overflow:hidden">
+                  <sc-if value="{{ pc.current }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;top:0;left:0;right:0;height:5px;background:#0B3D91"></div></sc-if>
+                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px">
+                    <div style="font:800 17px/1 'Archivo',sans-serif">{{ pc.name }}</div>
+                    <sc-if value="{{ pc.current }}" hint-placeholder-val="{{ false }}"><span style="font:700 10px/1 'IBM Plex Sans';letter-spacing:.05em;text-transform:uppercase;color:#0B3D91;background:#EAF0FB;padding:5px 9px;border-radius:6px">Actual</span></sc-if>
+                  </div>
+                  <div style="font:400 12px/1.4 'IBM Plex Sans';color:#5A6B82;margin-bottom:14px">{{ pc.tagline }}</div>
+                  <div style="display:flex;align-items:baseline;gap:3px;margin-bottom:14px"><span style="font:600 15px/1 'Archivo',sans-serif">$</span><span style="font:800 30px/1 'Archivo',sans-serif;letter-spacing:-.02em">{{ pc.price }}</span><span style="font:400 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-left:4px">/mes</span></div>
+                  <sc-if value="{{ pc.notCurrent }}" hint-placeholder-val="{{ false }}"><button onClick="{{ pc.onSelect }}" style="width:100%;height:42px;border:1.5px solid #0B3D91;background:#0B3D91;color:#fff;border-radius:10px;font:600 13px/1 'Archivo',sans-serif;cursor:pointer;margin-bottom:14px">Cambiar a este plan</button></sc-if>
+                  <sc-if value="{{ pc.current }}" hint-placeholder-val="{{ true }}"><div style="height:42px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:#F1F5FB;color:#5A6B82;font:600 13px/1 'IBM Plex Sans';margin-bottom:14px">Plan actual</div></sc-if>
+                  <div style="height:1px;background:#EDF1F8;margin-bottom:13px"></div>
+                  <sc-for list="{{ pc.features }}" as="f" hint-placeholder-count="4">
+                    <div style="display:flex;align-items:flex-start;gap:9px;margin-bottom:10px">
+                      <span style="flex:none;margin-top:1px;display:inline-flex;align-items:center;justify-content:center;width:16px;height:16px;border-radius:50%;background:#EAF0FB;color:#0B3D91;font-size:10px">✓</span>
+                      <span style="font:400 12.5px/1.4 'IBM Plex Sans';color:#33414F">{{ f }}</span>
+                    </div>
+                  </sc-for>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-if>
+
+      </div>
+
+      <!-- ===== BOTTOM TAB BAR ===== -->
+      <div style="flex:none;background:#fff;border-top:1px solid #E7EDF6;padding:9px 8px 26px;display:flex;align-items:flex-start;justify-content:space-around">
+        <button onClick="{{ tab.mapa.onClick }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:4px 0;color:{{ tab.mapa.fg }}">
+          <svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 18s6-5.2 6-9.5A6 6 0 1 0 4 8.5C4 12.8 10 18 10 18Z"/><circle cx="10" cy="8.5" r="2"/></svg>
+          <span style="font:600 10px/1 'IBM Plex Sans'">Mapa</span>
+        </button>
+        <button onClick="{{ tab.instalaciones.onClick }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:4px 0;color:{{ tab.instalaciones.fg }}">
+          <svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M7 5h9M7 10h9M7 15h9"/><circle cx="3.5" cy="5" r="1"/><circle cx="3.5" cy="10" r="1"/><circle cx="3.5" cy="15" r="1"/></svg>
+          <span style="font:600 10px/1 'IBM Plex Sans'">Instal.</span>
+        </button>
+        <button onClick="{{ tab.agenda.onClick }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:4px 0;color:{{ tab.agenda.fg }};position:relative">
+          <svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4.5" width="14" height="12" rx="2"/><path d="M3 8h14M7 3v3M13 3v3"/></svg>
+          <span style="font:600 10px/1 'IBM Plex Sans'">Agenda</span>
+          <sc-if value="{{ tab.agenda.locked }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:2px;right:50%;margin-right:-18px;width:13px;height:13px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="9" height="9" viewBox="0 0 16 16" fill="none" stroke="#B9821B" stroke-width="2"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg></span></sc-if>
+        </button>
+        <button onClick="{{ tab.reportes.onClick }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:4px 0;color:{{ tab.reportes.fg }};position:relative">
+          <svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M4 16V9M10 16V4M16 16v-5"/></svg>
+          <span style="font:600 10px/1 'IBM Plex Sans'">Reportes</span>
+          <sc-if value="{{ tab.reportes.locked }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:2px;right:50%;margin-right:-20px;width:13px;height:13px;border-radius:50%;background:#fff;display:flex;align-items:center;justify-content:center"><svg width="9" height="9" viewBox="0 0 16 16" fill="none" stroke="#B9821B" stroke-width="2"><rect x="3" y="7" width="10" height="7" rx="1.5"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/></svg></span></sc-if>
+        </button>
+        <button onClick="{{ tab.ajustes.onClick }}" style="flex:1;background:none;border:none;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:5px;padding:4px 0;color:{{ tab.ajustes.fg }}">
+          <svg width="22" height="22" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="2.6"/><path d="M10 2.5v2M10 15.5v2M17.5 10h-2M4.5 10h-2M15.3 4.7l-1.4 1.4M6.1 13.9l-1.4 1.4M15.3 15.3l-1.4-1.4M6.1 6.1 4.7 4.7"/></svg>
+          <span style="font:600 10px/1 'IBM Plex Sans'">Plan</span>
+        </button>
+      </div>
+
+      <!-- ========= WIZARD: NUEVA INSTALACIÓN (Opción A) ========= -->
+      <sc-if value="{{ frm.open }}" hint-placeholder-val="{{ false }}">
+        <div style="position:absolute;inset:0;z-index:200;background:#fff;display:flex;flex-direction:column">
+          <div style="flex:none;padding:50px 18px 14px;border-bottom:1px solid #EDF1F8;display:flex;align-items:center;justify-content:space-between">
+            <div style="font:800 17px/1 'Archivo',sans-serif">Nueva instalación</div>
+            <button onClick="{{ frm.close }}" style="width:30px;height:30px;border:none;border-radius:8px;background:#F4F7FC;display:flex;align-items:center;justify-content:center;cursor:pointer"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8593A8" stroke-width="1.8" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></button>
+          </div>
+          <!-- stepper -->
+          <div style="flex:none;display:flex;align-items:center;padding:15px 18px;background:#F7FAFE;border-bottom:1px solid #EDF1F8">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:none"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:{{ frm.n1.bg }};color:{{ frm.n1.fg }};font:700 11px/1 'Archivo'"><sc-if value="{{ frm.n1.showCheck }}" hint-placeholder-val="{{ false }}">✓</sc-if><sc-if value="{{ frm.isS1 }}" hint-placeholder-val="{{ true }}">{{ frm.n1.num }}</sc-if></span><span style="font:600 9.5px/1 'IBM Plex Sans';color:{{ frm.n1.labelColor }}">{{ frm.n1.label }}</span></div>
+            <div style="flex:1;height:2px;background:{{ frm.l1.color }};margin:0 5px 14px"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:none"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:{{ frm.n2.bg }};color:{{ frm.n2.fg }};font:700 11px/1 'Archivo'">{{ frm.n2.num }}</span><span style="font:600 9.5px/1 'IBM Plex Sans';color:{{ frm.n2.labelColor }}">{{ frm.n2.label }}</span></div>
+            <div style="flex:1;height:2px;background:{{ frm.l2.color }};margin:0 5px 14px"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:none"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:{{ frm.n3.bg }};color:{{ frm.n3.fg }};font:700 11px/1 'Archivo'">{{ frm.n3.num }}</span><span style="font:600 9.5px/1 'IBM Plex Sans';color:{{ frm.n3.labelColor }}">{{ frm.n3.label }}</span></div>
+            <div style="flex:1;height:2px;background:{{ frm.l3.color }};margin:0 5px 14px"></div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:5px;flex:none"><span style="display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;border-radius:50%;background:{{ frm.n4.bg }};color:{{ frm.n4.fg }};font:700 11px/1 'Archivo'">{{ frm.n4.num }}</span><span style="font:600 9.5px/1 'IBM Plex Sans';color:{{ frm.n4.labelColor }}">{{ frm.n4.label }}</span></div>
+          </div>
+          <!-- body -->
+          <div class="gm-scroll" style="flex:1;overflow-y:auto;padding:18px 16px">
+            <div style="font:800 16px/1.2 'Archivo',sans-serif;margin-bottom:16px">{{ frm.stepTitle }}</div>
+
+            <sc-if value="{{ frm.isS1 }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:13px">
+                <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Cliente / razón social</label><input value="{{ frm.cliente }}" onChange="{{ frm.setCliente }}" placeholder="Ej: Familia Rojas" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 13px;font:400 13.5px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"></div>
+                <div style="display:flex;gap:11px">
+                  <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Teléfono / WhatsApp</label><input value="{{ frm.tel }}" onChange="{{ frm.setTel }}" placeholder="+56 9 ____ ____" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 13px;font:400 13.5px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"></div>
+                  <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Email</label><input value="{{ frm.email }}" onChange="{{ frm.setEmail }}" placeholder="cliente@correo.cl" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 13px;font:400 13.5px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"></div>
+                </div>
+                <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Dirección</label><input value="{{ frm.direccion }}" onChange="{{ frm.setDireccion }}" placeholder="Calle y número" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 13px;font:400 13.5px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"></div>
+                <div style="display:flex;gap:11px">
+                  <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Comuna</label><input value="{{ frm.comuna }}" onChange="{{ frm.setComuna }}" placeholder="Comuna" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 13px;font:400 13.5px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"></div>
+                  <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Región</label><select value="{{ frm.region }}" onChange="{{ frm.setRegion }}" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 11px;font:400 13.5px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"><sc-for list="{{ frm.regionOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.value }}">{{ o.label }}</option></sc-for></select></div>
+                </div>
+                <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Tipo de inmueble</label><div style="display:flex;height:44px;padding:3px;border-radius:10px;background:#EFF3FA;border:1px solid #E2E9F4"><sc-for list="{{ frm.tipoSeg }}" as="t" hint-placeholder-count="3"><button onClick="{{ t.onClick }}" style="flex:1;border:none;border-radius:7px;cursor:pointer;background:{{ t.bg }};color:{{ t.fg }};font:600 11px/1 'IBM Plex Sans'">{{ t.label }}</button></sc-for></div></div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ frm.isS2 }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:13px">
+                <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Tipo de trámite (SEC)</label><select value="{{ frm.tramite }}" onChange="{{ frm.setTramite }}" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 11px;font:400 13px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"><sc-for list="{{ frm.tramiteOpts }}" as="o" hint-placeholder-count="6"><option value="{{ o.value }}">{{ o.label }}</option></sc-for></select></div>
+                <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Tipo de gas</label><div style="display:flex;height:44px;padding:3px;border-radius:10px;background:#EFF3FA;border:1px solid #E2E9F4"><sc-for list="{{ frm.gasSeg }}" as="g" hint-placeholder-count="2"><button onClick="{{ g.onClick }}" style="flex:1;border:none;border-radius:7px;cursor:pointer;background:{{ g.bg }};color:{{ g.fg }};font:600 11.5px/1 'IBM Plex Sans'">{{ g.label }}</button></sc-for></div></div>
+                <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">N° de cilindros GLP (si aplica)</label><input value="{{ frm.cilindros }}" onChange="{{ frm.setCilindros }}" placeholder="Ej: 2 × 45 kg" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 13px;font:400 13.5px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"></div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ frm.isS3 }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:13px">
+                <div style="display:flex;gap:11px">
+                  <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Potencia (kcal/h)</label><input value="{{ frm.potencia }}" onChange="{{ frm.setPotencia }}" placeholder="Ej: 24.000" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 13px;font:400 13.5px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"></div>
+                  <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">N° de artefactos</label><input value="{{ frm.artefactos }}" onChange="{{ frm.setArtefactos }}" placeholder="Ej: 3" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 13px;font:400 13.5px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"></div>
+                </div>
+                <div style="display:flex;gap:11px">
+                  <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Presión (mbar)</label><input value="{{ frm.presion }}" onChange="{{ frm.setPresion }}" placeholder="Ej: 28" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 13px;font:400 13.5px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"></div>
+                  <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Material cañería</label><select value="{{ frm.material }}" onChange="{{ frm.setMaterial }}" style="width:100%;height:44px;border:1px solid #D9E2F0;border-radius:10px;padding:0 11px;font:400 13px/1 'IBM Plex Sans';color:#1F2D40;background:#fff;outline:none"><sc-for list="{{ frm.materialOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.value }}">{{ o.label }}</option></sc-for></select></div>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ frm.isS4 }}" hint-placeholder-val="{{ false }}">
+              <div style="font:400 12.5px/1.5 'IBM Plex Sans';color:#7A8AA0;margin-bottom:14px">Adjunta los antecedentes técnicos que se ingresan en e-Declarador.</div>
+              <sc-if value="{{ frm.memoriaPend }}" hint-placeholder-val="{{ true }}">
+                <div style="border:1.5px dashed #0B3D91;border-radius:11px;background:#F5F8FE;padding:15px;margin-bottom:11px">
+                  <div style="display:flex;align-items:flex-start;gap:11px">
+                    <div style="flex:none;width:36px;height:36px;border-radius:9px;background:#0B3D91;display:flex;align-items:center;justify-content:center"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4v9M6 10l4 3 4-3M4 16h12"/></svg></div>
+                    <div style="flex:1"><div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap"><span style="font:700 13px/1.2 'IBM Plex Sans'">Memoria de cálculo</span><span style="font:700 9px/1 'IBM Plex Sans';letter-spacing:.04em;text-transform:uppercase;color:#B5453A;background:#FBEDEB;padding:3px 6px;border-radius:5px">Obligatoria</span></div><div style="font:400 11px/1.4 'IBM Plex Sans';color:#7A8AA0;margin-top:5px">Cargas térmicas, diámetros y caídas de presión. PDF.</div></div>
+                  </div>
+                  <button onClick="{{ frm.attachMemoria }}" style="margin-top:13px;width:100%;height:40px;border:none;border-radius:9px;background:#0B3D91;color:#fff;font:600 12.5px/1 'IBM Plex Sans';cursor:pointer">Seleccionar archivo</button>
+                </div>
+              </sc-if>
+              <sc-if value="{{ frm.memoria }}" hint-placeholder-val="{{ false }}">
+                <div style="display:flex;align-items:center;gap:11px;border:1px solid #CDE9D9;border-radius:11px;background:#ECF6F0;padding:14px;margin-bottom:11px">
+                  <div style="flex:none;width:36px;height:36px;border-radius:9px;background:#1A8F5B;display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px">✓</div>
+                  <div style="flex:1"><div style="font:700 12.5px/1.2 'IBM Plex Sans';color:#15734A">Memoria de cálculo adjunta</div><div style="font:400 11px/1.3 'IBM Plex Sans';color:#3F8A66;margin-top:3px">memoria_calculo.pdf</div></div>
+                </div>
+              </sc-if>
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;align-items:center;gap:11px;border:1px solid #E2E9F4;border-radius:10px;padding:12px 14px"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="#5A6B82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h7l3 3V17a.5.5 0 0 1-.5.5h-9A.5.5 0 0 1 5 17V2.5Z"/><path d="M7.5 10h5M7.5 13h5"/></svg><div style="flex:1;font:600 12px/1.1 'IBM Plex Sans'">Plano isométrico</div><span style="font:600 11.5px/1 'IBM Plex Sans';color:#0B3D91">Adjuntar</span></div>
+                <div style="display:flex;align-items:center;gap:11px;border:1px solid #E2E9F4;border-radius:10px;padding:12px 14px"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="#5A6B82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h7l3 3V17a.5.5 0 0 1-.5.5h-9A.5.5 0 0 1 5 17V2.5Z"/><path d="M7.5 10h5M7.5 13h5"/></svg><div style="flex:1;font:600 12px/1.1 'IBM Plex Sans'">Especificaciones técnicas (EETT)</div><span style="font:600 11.5px/1 'IBM Plex Sans';color:#0B3D91">Adjuntar</span></div>
+                <div style="display:flex;align-items:center;gap:11px;border:1px solid #E2E9F4;border-radius:10px;padding:12px 14px"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="#5A6B82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h7l3 3V17a.5.5 0 0 1-.5.5h-9A.5.5 0 0 1 5 17V2.5Z"/><path d="M7.5 10h5M7.5 13h5"/></svg><div style="flex:1;font:600 12px/1.1 'IBM Plex Sans'">Protocolo de hermeticidad</div><span style="font:600 11.5px/1 'IBM Plex Sans';color:#0B3D91">Adjuntar</span></div>
+              </div>
+            </sc-if>
+          </div>
+          <!-- footer -->
+          <div style="flex:none;padding:13px 16px 26px;border-top:1px solid #EDF1F8;display:flex;flex-direction:column;gap:9px">
+            <sc-if value="{{ frm.showCreateHint }}" hint-placeholder-val="{{ false }}">
+              <sc-if value="{{ frm.isS4 }}" hint-placeholder-val="{{ false }}"><div style="font:500 11px/1.3 'IBM Plex Sans';color:#B9821B;text-align:center">Adjunta la memoria de cálculo para crear la instalación</div></sc-if>
+            </sc-if>
+            <div style="display:flex;gap:11px">
+              <sc-if value="{{ frm.notFirst }}" hint-placeholder-val="{{ false }}"><button onClick="{{ frm.back }}" style="height:46px;padding:0 18px;border:1.5px solid #CDD9EE;background:#fff;border-radius:10px;font:600 13px/1 'IBM Plex Sans';color:#5A6B82;cursor:pointer">Atrás</button></sc-if>
+              <sc-if value="{{ frm.notLast }}" hint-placeholder-val="{{ true }}"><button onClick="{{ frm.next }}" style="flex:1;height:46px;border:none;border-radius:10px;background:#0B3D91;color:#fff;font:600 13.5px/1 'Archivo',sans-serif;cursor:pointer">Siguiente</button></sc-if>
+              <sc-if value="{{ frm.isLast }}" hint-placeholder-val="{{ false }}"><button onClick="{{ frm.submit }}" style="flex:1;height:46px;border:none;border-radius:10px;background:{{ frm.createBg }};color:#fff;font:600 13.5px/1 'Archivo',sans-serif;cursor:{{ frm.createCursor }}">Crear instalación</button></sc-if>
+            </div>
+          </div>
+        </div>
+      </sc-if>
+
+    </div>
+
+  </x-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;orgName&quot;:{&quot;editor&quot;:&quot;text&quot;,&quot;default&quot;:&quot;Gas Soluciones SpA&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;initialPlan&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;ind&quot;,&quot;pro&quot;,&quot;emp&quot;],&quot;default&quot;:&quot;ind&quot;,&quot;tsType&quot;:&quot;string&quot;}}">
+class Component extends DCLogic {
+  state = { plan: undefined, view: 'mapa', selId: 'i2', filter: 'all', region: 'rm', scheduled: {}, overrides: {}, memorias: {}, extra: [], contactsExtra: {}, capMsg: false, formOpen: false, form: { step: 0, cliente: '', tel: '', email: '', rut: '', tipo: 'Residencial', direccion: '', comuna: '', region: 'rm', tramite: 'tc6', gas: 'GN', cilindros: '', potencia: '', artefactos: '', presion: '', material: 'Cobre', memoria: false } };
+
+  REGIONS = [
+    { id: 'all', name: 'Todo Chile', center: [-37.5, -71.5], zoom: 4 },
+    { id: 'rm', name: 'Metropolitana', center: [-33.47, -70.66], zoom: 11 },
+    { id: 'val', name: 'Valparaíso', center: [-33.03, -71.55], zoom: 12 },
+    { id: 'bio', name: 'Biobío', center: [-36.82, -73.05], zoom: 12 },
+    { id: 'ara', name: 'La Araucanía', center: [-38.74, -72.59], zoom: 12 },
+    { id: 'ant', name: 'Antofagasta', center: [-23.65, -70.40], zoom: 12 },
+  ];
+
+  base = [
+    { id: 'i1', cliente: 'Familia Rojas', direccion: 'Av. Providencia 1240', comuna: 'Providencia', region: 'rm', tipo: 'Residencial', tramite: 'tc6', lat: -33.4264, lng: -70.6200, status: 'vigente', cert: '14 ago 2025', vence: '14 ago 2027', memoria: { estado: 'presentada', fecha: '14 ago 2025' } },
+    { id: 'i2', cliente: 'Panadería San Camilo', direccion: 'Los Leones 350', comuna: 'Providencia', region: 'rm', tipo: 'Comercial', tramite: 'tc6', lat: -33.4220, lng: -70.6100, status: 'por_vencer', dias: 21, cert: '08 jul 2024', vence: '08 jul 2026', memoria: { estado: 'presentada', fecha: '08 jul 2024' } },
+    { id: 'i3', cliente: 'Edificio Mirador', direccion: 'Gran Avenida 8870', comuna: 'La Cisterna', region: 'rm', tipo: 'Industrial', tramite: 'tc7', lat: -33.5300, lng: -70.6620, status: 'vencida', cert: '01 mar 2024', vence: '01 mar 2026', memoria: { estado: 'presentada', fecha: '01 mar 2024' } },
+    { id: 'i4', cliente: 'Familia Soto', direccion: 'Irarrázaval 2200', comuna: 'Ñuñoa', region: 'rm', tipo: 'Residencial', tramite: 'tc6', lat: -33.4560, lng: -70.6010, status: 'vigente', cert: '20 nov 2025', vence: '20 nov 2027', memoria: { estado: 'presentada', fecha: '20 nov 2025' } },
+    { id: 'i5', cliente: 'Hotel Vitacura', direccion: 'Vitacura 4100', comuna: 'Vitacura', region: 'rm', tipo: 'Comercial', tramite: 'tc11', lat: -33.3980, lng: -70.5900, status: 'vigente', cert: '12 feb 2026', vence: '12 feb 2028', memoria: { estado: 'presentada', fecha: '12 feb 2026' } },
+    { id: 'i6', cliente: 'Restaurant Matta', direccion: 'Av. Matta 980', comuna: 'Santiago', region: 'rm', tipo: 'Comercial', tramite: 'tc6', lat: -33.4640, lng: -70.6420, status: 'por_vencer', dias: 73, cert: '02 sep 2024', vence: '02 sep 2026', memoria: { estado: 'presentada', fecha: '02 sep 2024' } },
+    { id: 'i7', cliente: 'Familia Pérez', direccion: 'Av. Macul 5600', comuna: 'Macul', region: 'rm', tipo: 'Residencial', tramite: 'tc6', lat: -33.4900, lng: -70.5990, status: 'vigente', cert: '05 dic 2025', vence: '05 dic 2027', memoria: { estado: 'presentada', fecha: '05 dic 2025' } },
+    { id: 'i8', cliente: 'Lavandería Maipú', direccion: '5 de Abril 1200', comuna: 'Maipú', region: 'rm', tipo: 'Comercial', tramite: 'tc6', lat: -33.5110, lng: -70.7580, status: 'vigente', cert: '18 ene 2026', vence: '18 ene 2028', memoria: { estado: 'presentada', fecha: '18 ene 2026' } },
+    { id: 'i9', cliente: 'Condominio El Bosque', direccion: 'El Bosque Norte 500', comuna: 'Las Condes', region: 'rm', tipo: 'Residencial', tramite: 'tc2', lat: -33.4160, lng: -70.5990, status: 'vigente', cert: '10 oct 2025', vence: '10 oct 2027', recert: true, mods: [{ fecha: '02 jun 2026', detalle: 'Ampliación de red interior de gas' }], memoria: { estado: 'presentada', fecha: '10 oct 2025' } },
+    { id: 'i10', cliente: 'Taller Vespucio', direccion: 'Américo Vespucio 7700', comuna: 'Pudahuel', region: 'rm', tipo: 'Industrial', tramite: 'tc7', lat: -33.4400, lng: -70.7600, status: 'vigente', cert: '22 oct 2025', vence: '22 oct 2027', memoria: { estado: 'presentada', fecha: '22 oct 2025' } },
+    { id: 'v1', cliente: 'Edificio Brisamar', direccion: 'Av. Brasil 1100', comuna: 'Valparaíso', region: 'val', tipo: 'Residencial', tramite: 'tc2', lat: -33.0458, lng: -71.6197, status: 'por_vencer', dias: 40, cert: '14 may 2024', vence: '14 may 2026', memoria: { estado: 'presentada', fecha: '14 may 2024' } },
+    { id: 'v2', cliente: 'Restaurant Caleta', direccion: 'Av. Perú 500', comuna: 'Viña del Mar', region: 'val', tipo: 'Comercial', tramite: 'tc6', lat: -33.0153, lng: -71.5500, status: 'vigente', cert: '03 mar 2026', vence: '03 mar 2028', memoria: { estado: 'presentada', fecha: '03 mar 2026' } },
+    { id: 'v3', cliente: 'Hotel Cerro Alegre', direccion: 'Urriola 660', comuna: 'Valparaíso', region: 'val', tipo: 'Comercial', tramite: 'tc11', lat: -33.0410, lng: -71.6280, status: 'vencida', cert: '20 abr 2024', vence: '20 abr 2026', memoria: { estado: 'presentada', fecha: '20 abr 2024' } },
+    { id: 'b1', cliente: 'Panificadora Biobío', direccion: 'Barros Arana 800', comuna: 'Concepción', region: 'bio', tipo: 'Comercial', tramite: 'tc6', lat: -36.8270, lng: -73.0500, status: 'vigente', cert: '11 nov 2025', vence: '11 nov 2027', memoria: { estado: 'presentada', fecha: '11 nov 2025' } },
+    { id: 'b2', cliente: 'Familia Sandoval', direccion: 'Los Carrera 250', comuna: 'Talcahuano', region: 'bio', tipo: 'Residencial', tramite: 'tc6', lat: -36.7250, lng: -73.1170, status: 'por_vencer', dias: 12, cert: '02 jul 2024', vence: '02 jul 2026', memoria: { estado: 'presentada', fecha: '02 jul 2024' } },
+    { id: 'a1', cliente: 'Minera Andes Norte', direccion: 'Av. Argentina 2200', comuna: 'Antofagasta', region: 'ant', tipo: 'Industrial', tramite: 'tc13', lat: -23.6500, lng: -70.4000, status: 'vigente', cert: '08 ene 2026', vence: '08 ene 2028', memoria: { estado: 'presentada', fecha: '08 ene 2026' } },
+    { id: 'a2', cliente: 'Hotel del Desierto', direccion: 'Balmaceda 2575', comuna: 'Antofagasta', region: 'ant', tipo: 'Comercial', tramite: 'tc11', lat: -23.6800, lng: -70.4100, status: 'vencida', cert: '15 feb 2024', vence: '15 feb 2026', memoria: { estado: 'presentada', fecha: '15 feb 2024' } },
+    { id: 'r1', cliente: 'Familia Huenchual', direccion: 'Av. Alemania 600', comuna: 'Temuco', region: 'ara', tipo: 'Residencial', tramite: 'tc6', lat: -38.7400, lng: -72.5900, status: 'por_vencer', dias: 55, cert: '20 ago 2024', vence: '20 ago 2026', memoria: { estado: 'presentada', fecha: '20 ago 2024' } },
+  ];
+
+  TRAMITES = {
+    tc1:  { code: 'TC1',  nombre: 'Puesta en servicio red de distribución de gas de red' },
+    tc2:  { code: 'TC2',  nombre: 'Central de GLP y red de distribución de GLP en media presión' },
+    tc3:  { code: 'TC3',  nombre: 'Puesta en servicio de empalmes de gas de red' },
+    tc6:  { code: 'TC6',  nombre: 'Instalaciones interiores de gas' },
+    tc7:  { code: 'TC7',  nombre: 'Instalaciones interiores industriales de gas' },
+    tc11: { code: 'TC11', nombre: 'Almacenamiento de cilindros de GLP' },
+    tc12: { code: 'TC12', nombre: 'Estación surtidora de GLP para vehículos y montacargas' },
+    tc13: { code: 'TC13', nombre: 'Plantas de gas' },
+    tc15: { code: 'TC15', nombre: 'Instalaciones de hidrógeno' },
+    tc10b:{ code: 'TC10B',nombre: 'Camión tanque de transporte de gas licuado a granel' },
+  };
+
+  CONTACTS = {
+    i1:  { nombre: 'Jorge Rojas', tel: '+56 9 8421 7733', email: 'jorge.rojas@gmail.com' },
+    i2:  { nombre: 'Camilo Vera', tel: '+56 9 7765 2210', email: 'contacto@sancamilo.cl' },
+    i3:  { nombre: 'Patricia Lagos · Adm.', tel: '+56 9 6612 4480', email: 'admin@edificiomirador.cl' },
+    i4:  { nombre: 'Marcela Soto', tel: '+56 9 9034 1187', email: 'm.soto@gmail.com' },
+    i5:  { nombre: 'Recepción Hotel', tel: '+56 2 2895 4400', email: 'recepcion@hotelvitacura.cl' },
+    i6:  { nombre: 'Luis Matta', tel: '+56 9 8123 6650', email: 'luis@restmatta.cl' },
+    i7:  { nombre: 'Ana Pérez', tel: '+56 9 7740 9921', email: 'ana.perez@gmail.com' },
+    i8:  { nombre: 'Sergio Díaz', tel: '+56 9 6655 7012', email: 'sergio@lavmaipu.cl' },
+    i9:  { nombre: 'René Fuentes · Adm.', tel: '+56 9 9911 2030', email: 'admin@elbosque.cl' },
+    i10: { nombre: 'Mario Cruz', tel: '+56 9 8800 4456', email: 'taller@vespucio.cl' },
+    v1:  { nombre: 'Claudia Reyes · Adm.', tel: '+56 9 7321 5566', email: 'admin@brisamar.cl' },
+    v2:  { nombre: 'Pedro Núñez', tel: '+56 9 9456 7788', email: 'caleta@rest.cl' },
+    v3:  { nombre: 'Recepción Hotel', tel: '+56 32 259 8800', email: 'hola@cerroalegre.cl' },
+    b1:  { nombre: 'Rosa Maldonado', tel: '+56 9 8120 4567', email: 'ventas@panbiobio.cl' },
+    b2:  { nombre: 'Hugo Sandoval', tel: '+56 9 7654 3321', email: 'h.sandoval@gmail.com' },
+    a1:  { nombre: 'Depto. Operaciones', tel: '+56 55 263 7700', email: 'operaciones@andesnorte.cl' },
+    a2:  { nombre: 'Reservas Hotel', tel: '+56 55 248 9900', email: 'reservas@hoteldesierto.cl' },
+    r1:  { nombre: 'Iván Huenchual', tel: '+56 9 9087 6654', email: 'ivan.h@gmail.com' },
+  };
+
+  PLANS = {
+    ind: { key: 'ind', name: 'Independiente', price: '11.990', limit: 25, agenda: false, historial: false, reportes: false, equipo: false, tagline: 'Para el instalador que trabaja solo.',
+      features: ['Hasta 25 instalaciones', 'Mapa y geolocalización', 'Alertas de vencimiento', 'Certificados en PDF'] },
+    pro: { key: 'pro', name: 'Profesional', price: '29.990', limit: Infinity, agenda: true, historial: true, reportes: true, equipo: false, tagline: 'Para instaladores con alto volumen.',
+      features: ['Instalaciones ilimitadas', 'Agendamiento de visitas', 'Historial de modificaciones', 'Reportes y exportación', 'Soporte prioritario'] },
+    emp: { key: 'emp', name: 'Empresa', price: '59.990', limit: Infinity, agenda: true, historial: true, reportes: true, equipo: true, tagline: 'Para empresas y certificadores.',
+      features: ['Todo lo de Profesional', 'Equipos y roles de usuario', 'Integración con certificadores', 'API y registros SEC', 'Soporte 24/7'] },
+  };
+
+  STATUS = {
+    vigente: { label: 'Vigente', color: '#1A8F5B' },
+    por_vencer: { label: 'Por vencer', color: '#D98A0B' },
+    vencida: { label: 'Vencida', color: '#C0392B' },
+    recert: { label: 'Requiere recert.', color: '#7C3AED' },
+  };
+
+  go(v) { this.setState({ view: v }); }
+  setPlan(p) { this.setState({ plan: p, capMsg: false }); }
+  select(id) { this.setState({ selId: id, view: 'mapa' }); }
+  setFilter(f) { this.setState({ filter: f }); }
+  schedule(id, d) { this.setState(s => ({ scheduled: { ...s.scheduled, [id]: d } })); }
+  registerMod(id) {
+    this.setState(s => {
+      const ov = s.overrides[id] || {};
+      const mods = (ov.mods || []).concat([{ fecha: '17 jun 2026', detalle: 'Modificación registrada en la instalación' }]);
+      const memorias = { ...s.memorias }; delete memorias[id]; // la modificación obliga a presentar nueva memoria de cálculo
+      return { overrides: { ...s.overrides, [id]: { recert: true, mods } }, memorias };
+    });
+  }
+  attachMemoria(id) { this.setState(s => ({ memorias: { ...s.memorias, [id]: { estado: 'presentada', fecha: '17 jun 2026' } } })); }
+  setRegion(id) {
+    this.setState({ region: id });
+    const r = this.REGIONS.find(x => x.id === id);
+    if (r && this._map) this._map.flyTo(r.center, r.zoom, { duration: 0.8 });
+  }
+  componentDidMount() { this.ensureMap(); }
+  componentDidUpdate() { this.ensureMap(); }
+  ensureMap() {
+    if (this._curView !== 'mapa') return;
+    const L = window.L;
+    if (!L || !this._mapEl) { this._mapTimer = setTimeout(() => this.ensureMap(), 120); return; }
+    if (this._map && this._map._container !== this._mapEl) { try { this._map.remove(); } catch (e) {} this._map = null; }
+    if (!this._map) {
+      const r0 = this.REGIONS.find(x => x.id === this.state.region) || this.REGIONS[1];
+      this._map = L.map(this._mapEl, { center: r0.center, zoom: r0.zoom, zoomControl: true, attributionControl: false, scrollWheelZoom: false });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', { maxZoom: 19, subdomains: 'abcd' }).addTo(this._map);
+      this._markersLayer = L.layerGroup().addTo(this._map);
+    }
+    setTimeout(() => { try { this._map.invalidateSize(); } catch (e) {} }, 50);
+    this.syncMarkers();
+  }
+  syncMarkers() {
+    const L = window.L;
+    if (!L || !this._map || !this._markersLayer) return;
+    this._markersLayer.clearLayers();
+    (this._mapPins || []).forEach(p => {
+      const ring = p.selected ? `<span style="position:absolute;left:50%;top:50%;width:21px;height:21px;margin:-10.5px 0 0 -10.5px;border-radius:50%;background:${p.color};animation:gmPulse 1.8s ease-out infinite"></span>` : '';
+      const icon = L.divIcon({
+        className: '', iconSize: [21, 21], iconAnchor: [10.5, 10.5],
+        html: `<div style="position:relative;width:21px;height:21px">${ring}<span style="position:relative;display:block;width:21px;height:21px;border-radius:50%;background:${p.color};border:3px solid #fff;box-shadow:0 3px 9px rgba(8,30,80,.4)"></span></div>`,
+      });
+      const m = L.marker([p.lat, p.lng], { icon, title: p.cliente, riseOnHover: true });
+      m.on('click', () => p.onSelect());
+      m.addTo(this._markersLayer);
+    });
+  }
+  blankForm() { return { step: 0, cliente: '', tel: '', email: '', rut: '', tipo: 'Residencial', direccion: '', comuna: '', region: this.state.region === 'all' ? 'rm' : this.state.region, tramite: 'tc6', gas: 'GN', cilindros: '', potencia: '', artefactos: '', presion: '', material: 'Cobre', memoria: false }; }
+  addInstall() {
+    const eff = this.effective();
+    const plan = this.PLANS[this.curPlan()];
+    if (eff.length >= plan.limit) { this.setState({ capMsg: true }); return; }
+    this.setState({ formOpen: true, capMsg: false, form: this.blankForm() });
+  }
+  closeForm() { this.setState({ formOpen: false }); }
+  setForm(patch) { this.setState(s => ({ form: { ...s.form, ...patch } })); }
+  formStep(n) { this.setForm({ step: Math.max(0, Math.min(3, n)) }); }
+  submitForm() {
+    const f = this.state.form;
+    if (!f.cliente || !f.memoria) return;
+    const r = this.REGIONS.find(x => x.id === f.region) || this.REGIONS[1];
+    const j = () => (Math.random() - 0.5) * 0.12;
+    this.setState(s => {
+      const id = 'x' + (s.extra.length + 1);
+      const item = { id, cliente: f.cliente, direccion: f.direccion || 'Sin dirección', comuna: f.comuna || r.name, region: f.region, tipo: f.tipo, tramite: f.tramite, lat: r.center[0] + j(), lng: r.center[1] + j(), status: 'vigente', cert: '17 jun 2026', vence: '17 jun 2028', memoria: { estado: 'presentada', fecha: '17 jun 2026' } };
+      return { extra: [...s.extra, item], contactsExtra: { ...s.contactsExtra, [id]: { nombre: f.cliente, tel: f.tel, email: f.email } }, formOpen: false, selId: id, view: 'mapa' };
+    });
+  }
+
+  curPlan() { return this.state.plan || this.props.initialPlan || 'ind'; }
+
+  effective() {
+    return this.base.concat(this.state.extra).map(b => {
+      const ov = this.state.overrides[b.id] || {};
+      const recert = ov.recert || b.recert || false;
+      const mods = (b.mods || []).concat(ov.mods || []);
+      const eStatus = recert ? 'recert' : b.status;
+      const memUser = this.state.memorias[b.id];
+      let memEstado, memFecha;
+      if (memUser) { memEstado = 'presentada'; memFecha = memUser.fecha; }
+      else if (recert) { memEstado = 'pendiente'; memFecha = null; }
+      else { memEstado = (b.memoria && b.memoria.estado) || 'pendiente'; memFecha = b.memoria && b.memoria.fecha; }
+      const tramite = this.TRAMITES[b.tramite] || this.TRAMITES.tc6;
+      return { ...b, recert, mods, eStatus, memEstado, memFecha, tramiteCode: tramite.code, tramiteNombre: tramite.nombre };
+    });
+  }
+
+  renderVals() {
+    const pk = this.curPlan();
+    const P = this.PLANS[pk];
+    const view = this.state.view;
+    const eff = this.effective();
+    const S = this.STATUS;
+
+    const cBy = (s) => eff.filter(i => i.eStatus === s).length;
+    const counts = {
+      total: eff.length, vigente: cBy('vigente'), porvencer: cBy('por_vencer'),
+      vencida: cBy('vencida'), recert: cBy('recert'),
+      criticas: cBy('vencida') + cBy('recert'),
+      memoriasPend: eff.filter(i => i.memEstado !== 'presentada').length,
+    };
+    const denom = Math.max(eff.length, 1);
+    const dist = {
+      vigente: Math.round(counts.vigente / denom * 100), porvencer: Math.round(counts.porvencer / denom * 100),
+      vencida: Math.round(counts.vencida / denom * 100), recert: Math.round(counts.recert / denom * 100),
+    };
+
+    // redirect away from locked tab
+    const allowed = { mapa: true, instalaciones: true, agenda: P.agenda, reportes: P.reportes, ajustes: true };
+    const safeView = allowed[view] ? view : view; // keep view; locked screens render upsell
+
+    const mkTab = (id, locked) => {
+      const active = view === id;
+      return { onClick: () => this.go(id), locked: !!locked, fg: active ? '#0B3D91' : '#9AA7BA' };
+    };
+    const tab = {
+      mapa: mkTab('mapa', false), instalaciones: mkTab('instalaciones', false),
+      agenda: mkTab('agenda', !P.agenda), reportes: mkTab('reportes', !P.reportes), ajustes: mkTab('ajustes', false),
+    };
+
+    const mkSeg = (k) => {
+      const on = pk === k;
+      return { onClick: () => this.setPlan(k), bg: on ? '#0B3D91' : 'transparent', fg: on ? '#fff' : '#5A6B82', sh: on ? '0 1px 3px rgba(11,61,145,.3)' : 'none' };
+    };
+    const seg = { ind: mkSeg('ind'), pro: mkSeg('pro'), emp: mkSeg('emp') };
+
+    const flist = [['all', 'Todas'], ['vigente', 'Vigentes'], ['por_vencer', 'Por vencer'], ['vencida', 'Vencidas'], ['recert', 'Recert.']];
+    const filters = flist.map(([k, label]) => {
+      const on = this.state.filter === k;
+      return { label, onClick: () => this.setFilter(k), bg: on ? '#0B3D91' : '#fff', fg: on ? '#fff' : '#5A6B82', border: on ? '#0B3D91' : '#D9E2F0' };
+    });
+
+    const filt = (i) => this.state.filter === 'all' || i.eStatus === this.state.filter;
+    const mapPins = eff.filter(i => i.lat != null && filt(i)).map(i => ({
+      id: i.id, lat: i.lat, lng: i.lng, cliente: i.cliente, color: S[i.eStatus].color,
+      selected: i.id === this.state.selId, onSelect: () => this.setState({ selId: i.id }),
+    }));
+    this._mapPins = mapPins; this._curView = view;
+
+    const regionNav = this.REGIONS.map(r => {
+      const on = this.state.region === r.id;
+      const count = r.id === 'all' ? eff.filter(i => i.lat != null).length : eff.filter(i => i.region === r.id).length;
+      return { id: r.id, name: r.name, count, onClick: () => this.setRegion(r.id), bg: on ? '#0B3D91' : '#fff', fg: on ? '#fff' : '#33414F', border: on ? '#0B3D91' : '#D9E2F0', countColor: on ? 'rgba(255,255,255,.75)' : '#8593A8' };
+    });
+
+    const sObj = eff.find(i => i.id === this.state.selId) || eff[0];
+    const scheduledDate = this.state.scheduled[sObj.id] || null;
+    const needsAction = sObj.eStatus !== 'vigente';
+    const venceText = sObj.eStatus === 'vigente'
+      ? 'Certificación vigente. Próxima revisión: ' + sObj.vence + '.'
+      : sObj.eStatus === 'por_vencer'
+        ? 'Vence en ' + (sObj.dias || '—') + ' días (' + sObj.vence + '). Conviene agendar la recertificación.'
+        : sObj.eStatus === 'recert'
+          ? 'La instalación fue modificada tras certificar: el proceso de certificación debe repetirse.'
+          : 'Certificación vencida (' + sObj.vence + '). Requiere recertificación inmediata.';
+    const dates = ['Lun 22 jun', 'Mié 24 jun', 'Vie 26 jun'];
+    const c = this.CONTACTS[sObj.id] || this.state.contactsExtra[sObj.id] || {};
+    const hasContact = !!c.tel;
+    const telDigits = (c.tel || '').replace(/[^\d]/g, '');
+    const sel = {
+      cliente: sObj.cliente, direccion: sObj.direccion, comuna: sObj.comuna, tipo: sObj.tipo,
+      cert: sObj.cert, vence: sObj.vence, statusLabel: S[sObj.eStatus].label, statusColor: S[sObj.eStatus].color,
+      contactNombre: c.nombre || 'Sin contacto registrado', contactTel: c.tel || '', contactEmail: c.email || '',
+      hasContact, noContact: !hasContact,
+      telHref: 'tel:' + (c.tel || '').replace(/\s/g, ''), waHref: 'https://wa.me/' + telDigits, mailHref: 'mailto:' + (c.email || ''),
+      tramiteCode: sObj.tramiteCode, tramiteNombre: sObj.tramiteNombre,
+      memoriaPresentada: sObj.memEstado === 'presentada', memoriaPendiente: sObj.memEstado !== 'presentada',
+      memoriaSub: sObj.memEstado === 'presentada'
+        ? 'Diámetros, caídas de presión y potencia · ' + (sObj.memFecha || '')
+        : 'Cargas térmicas, diámetros y caídas de presión',
+      onAttachMemoria: () => this.attachMemoria(sObj.id),
+      venceText, needsAction, alDia: !needsAction,
+      canAgenda: P.agenda && needsAction, lockAgenda: !P.agenda && needsAction,
+      scheduled: !!scheduledDate, notScheduled: !scheduledDate, scheduledDate,
+      dateChips: dates.map(d => ({ label: d, onPick: () => this.schedule(sObj.id, d) })),
+      reschedule: () => this.schedule(sObj.id, null),
+      canHistorial: P.historial, lockHistorial: !P.historial,
+      mods: sObj.mods, hasMods: sObj.mods.length > 0, noMods: sObj.mods.length === 0,
+      onRegisterMod: () => this.registerMod(sObj.id),
+    };
+
+    const rows = eff.map(i => ({
+      cliente: i.cliente, direccion: i.direccion, comuna: i.comuna, tipo: i.tipo, tramiteCode: i.tramiteCode,
+      memoriaPendiente: i.memEstado !== 'presentada',
+      statusLabel: S[i.eStatus].label, color: S[i.eStatus].color, vence: i.vence,
+      onView: () => this.select(i.id),
+    }));
+    const limitLabel = P.limit === Infinity ? 'Instalaciones ilimitadas' : counts.total + ' de ' + P.limit + ' instalaciones';
+    const planInfo = {
+      name: P.name, limitLabel,
+      showBar: P.limit !== Infinity, usePct: P.limit === Infinity ? 0 : Math.min(100, Math.round(counts.total / P.limit * 100)),
+    };
+
+    const parseChip = (d) => { const m = d.match(/(\d+)\s(\w+)/); return m ? { day: m[1], mon: m[2] } : { day: '', mon: '' }; };
+    const scheduledList = eff.filter(i => this.state.scheduled[i.id]).map(i => {
+      const p = parseChip(this.state.scheduled[i.id]);
+      return { cliente: i.cliente, comuna: i.comuna, tipo: i.tipo, day: p.day, mon: p.mon, onCancel: () => this.schedule(i.id, null) };
+    });
+    const pendingList = eff.filter(i => i.eStatus !== 'vigente' && !this.state.scheduled[i.id]).map(i => ({
+      cliente: i.cliente, comuna: i.comuna, statusLabel: S[i.eStatus].label, color: S[i.eStatus].color, onGo: () => this.select(i.id),
+    }));
+    const agenda = {
+      scheduled: scheduledList, scheduledCount: scheduledList.length, hasScheduled: scheduledList.length > 0, noScheduled: scheduledList.length === 0,
+      pending: pendingList, pendingCount: pendingList.length, hasPending: pendingList.length > 0, noPending: pendingList.length === 0,
+    };
+
+    const planCards = ['ind', 'pro', 'emp'].map(k => {
+      const pl = this.PLANS[k]; const current = k === pk;
+      return { name: pl.name, tagline: pl.tagline, price: pl.price, features: pl.features, current, notCurrent: !current, border: current ? '#0B3D91' : '#E4EAF4', onSelect: () => this.setPlan(k) };
+    });
+
+    // ===== Formulario (wizard) =====
+    const F = this.state.form;
+    const stepNames = ['Cliente', 'Trámite', 'Técnico', 'Documentos'];
+    const cur = F.step;
+    const node = (i) => { const done = i < cur, active = i === cur; return { num: i + 1, label: stepNames[i], showCheck: done, bg: done ? '#1A8F5B' : (active ? '#0B3D91' : '#E1E8F2'), fg: (done || active) ? '#fff' : '#9AA7BA', labelColor: active ? '#0B3D91' : (done ? '#15734A' : '#9AA7BA') }; };
+    const line = (i) => ({ color: i < cur ? '#1A8F5B' : '#D7E0EE' });
+    const c1 = !!F.cliente && !!F.tel;
+    const c3 = !!F.potencia;
+    const canCreate = c1 && F.memoria;
+    const fld = (k) => (e) => this.setForm({ [k]: e.target.value });
+    const frm = {
+      open: this.state.formOpen, step: cur,
+      isS1: cur === 0, isS2: cur === 1, isS3: cur === 2, isS4: cur === 3,
+      notFirst: cur > 0, notLast: cur < 3, isLast: cur === 3,
+      n1: node(0), n2: node(1), n3: node(2), n4: node(3), l1: line(1), l2: line(2), l3: line(3),
+      stepTitle: ['Cliente e inmueble', 'Trámite SEC', 'Datos técnicos', 'Documentación'][cur],
+      cliente: F.cliente, tel: F.tel, email: F.email, rut: F.rut, direccion: F.direccion, comuna: F.comuna, region: F.region,
+      tramite: F.tramite, gas: F.gas, cilindros: F.cilindros, potencia: F.potencia, artefactos: F.artefactos, presion: F.presion, material: F.material,
+      memoria: F.memoria, memoriaPend: !F.memoria,
+      setCliente: fld('cliente'), setTel: fld('tel'), setEmail: fld('email'), setRut: fld('rut'), setDireccion: fld('direccion'), setComuna: fld('comuna'), setRegion: fld('region'),
+      setTramite: fld('tramite'), setCilindros: fld('cilindros'), setPotencia: fld('potencia'), setArtefactos: fld('artefactos'), setPresion: fld('presion'), setMaterial: fld('material'),
+      tipoSeg: ['Residencial', 'Comercial', 'Industrial'].map(v => ({ label: v, bg: F.tipo === v ? '#0B3D91' : 'transparent', fg: F.tipo === v ? '#fff' : '#5A6B82', onClick: () => this.setForm({ tipo: v }) })),
+      gasSeg: [['GN', 'Gas natural'], ['GLP', 'Gas licuado']].map(a => ({ label: a[0], bg: F.gas === a[0] ? '#0B3D91' : 'transparent', fg: F.gas === a[0] ? '#fff' : '#5A6B82', onClick: () => this.setForm({ gas: a[0] }) })),
+      tramiteOpts: Object.keys(this.TRAMITES).map(k => ({ value: k, label: this.TRAMITES[k].code + ' · ' + this.TRAMITES[k].nombre })),
+      regionOpts: this.REGIONS.filter(r => r.id !== 'all').map(r => ({ value: r.id, label: r.name })),
+      materialOpts: ['Cobre', 'Acero', 'Polietileno (PE)', 'Fierro galvanizado'].map(v => ({ value: v, label: v })),
+      attachMemoria: () => this.setForm({ memoria: true }),
+      next: () => this.formStep(cur + 1), back: () => this.formStep(cur - 1),
+      close: () => this.closeForm(), submit: () => this.submitForm(),
+      canCreate, createBg: canCreate ? '#0B3D91' : '#C7D0DE', createCursor: canCreate ? 'pointer' : 'not-allowed', showCreateHint: !canCreate,
+    };
+
+    return {
+      org: this.props.orgName || 'Gas Soluciones SpA',
+      plan: planInfo, tab, seg, filters, regionNav, mapPins, sel, rows, counts, dist, agenda, planCards, frm,
+      mapRef: this._mapRefCb || (this._mapRefCb = (el) => { this._mapEl = el; }),
+      capMsg: this.state.capMsg,
+      hasMemPend: counts.memoriasPend > 0,
+      addInstall: () => this.addInstall(),
+      upgradePro: () => this.setPlan('pro'), upgradeEmp: () => this.setPlan('emp'),
+      isMapa: view === 'mapa', isInstal: view === 'instalaciones', isAgenda: view === 'agenda',
+      isReportes: view === 'reportes', isAjustes: view === 'ajustes',
+      canAgenda: P.agenda, lockAgendaView: !P.agenda,
+      canReportes: P.reportes, lockReportesView: !P.reportes,
+    };
+  }
+}
+</script>
+</body>
+</html>

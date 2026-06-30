@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800;900&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  *{box-sizing:border-box}
+  body{margin:0}
+  .gm-scroll::-webkit-scrollbar{height:9px;width:9px}
+  .gm-scroll::-webkit-scrollbar-thumb{background:#cbd5e6;border-radius:6px}
+</style>
+</helmet>
+
+<div style="width:max-content;min-width:100%;min-height:100vh;box-sizing:border-box;padding:48px;background:#e7e5df;font-family:'IBM Plex Sans',sans-serif;color:#0F1B2D">
+
+  <div style="margin-bottom:8px;font:800 24px/1.1 'Archivo',sans-serif;letter-spacing:-.01em">Formulario · Nueva instalación</div>
+  <div style="margin-bottom:34px;font:400 14px/1.5 'IBM Plex Sans';color:#5A6B82;max-width:760px">Tres opciones de UX para el ingreso de un nuevo proyecto. El contenido de campos está basado en lo que exige e-Declarador (SEC) para declarar instalaciones de gas. La <b>memoria de cálculo</b> es documento obligatorio. Elige una y la integro en la app móvil y de escritorio.</div>
+
+  <div style="display:flex;gap:40px;align-items:flex-start">
+
+    <!-- ============================================================= -->
+    <!-- OPCIÓN A — ASISTENTE POR PASOS (WIZARD) -->
+    <!-- ============================================================= -->
+    <div style="flex:none;width:560px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;background:#0B3D91;color:#fff;font:800 13px/1 'Archivo',sans-serif">A</span>
+        <div><div style="font:700 15px/1.1 'Archivo',sans-serif">Asistente por pasos</div><div style="font:400 12px/1.3 'IBM Plex Sans';color:#7A8AA0">Wizard guiado · ideal para móvil</div></div>
+      </div>
+
+      <div style="background:#fff;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden;border:1px solid #E7EDF6">
+        <!-- header -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid #EDF1F8">
+          <div style="font:800 17px/1 'Archivo',sans-serif">Nueva instalación</div>
+          <div style="width:30px;height:30px;border-radius:8px;background:#F4F7FC;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8593A8" stroke-width="1.8" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></div>
+        </div>
+        <!-- stepper -->
+        <div style="display:flex;align-items:center;padding:18px 22px;background:#F7FAFE;border-bottom:1px solid #EDF1F8">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:none"><span style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#1A8F5B;color:#fff;font:700 12px/1 'Archivo'">✓</span><span style="font:600 10.5px/1 'IBM Plex Sans';color:#15734A">Cliente</span></div>
+          <div style="flex:1;height:2px;background:#1A8F5B;margin:0 6px 16px"></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:none"><span style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#1A8F5B;color:#fff;font:700 12px/1 'Archivo'">✓</span><span style="font:600 10.5px/1 'IBM Plex Sans';color:#15734A">Trámite</span></div>
+          <div style="flex:1;height:2px;background:#1A8F5B;margin:0 6px 16px"></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:none"><span style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#1A8F5B;color:#fff;font:700 12px/1 'Archivo'">✓</span><span style="font:600 10.5px/1 'IBM Plex Sans';color:#15734A">Técnico</span></div>
+          <div style="flex:1;height:2px;background:#D7E0EE;margin:0 6px 16px"></div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:6px;flex:none"><span style="display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border-radius:50%;background:#0B3D91;color:#fff;font:700 12px/1 'Archivo'">4</span><span style="font:700 10.5px/1 'IBM Plex Sans';color:#0B3D91">Documentos</span></div>
+        </div>
+        <!-- body: step 4 (documentos) -->
+        <div style="padding:22px">
+          <div style="font:800 16px/1.2 'Archivo',sans-serif;margin-bottom:5px">Documentación de la instalación</div>
+          <div style="font:400 12.5px/1.5 'IBM Plex Sans';color:#7A8AA0;margin-bottom:18px">Adjunta los antecedentes técnicos que se ingresan en e-Declarador.</div>
+
+          <!-- memoria required -->
+          <div style="border:1.5px dashed #0B3D91;border-radius:11px;background:#F5F8FE;padding:16px;margin-bottom:11px">
+            <div style="display:flex;align-items:flex-start;gap:12px">
+              <div style="flex:none;width:38px;height:38px;border-radius:9px;background:#0B3D91;display:flex;align-items:center;justify-content:center"><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#fff" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 4v9M6 10l4 3 4-3M4 16h12"/></svg></div>
+              <div style="flex:1"><div style="display:flex;align-items:center;gap:8px"><span style="font:700 13.5px/1.2 'IBM Plex Sans'">Memoria de cálculo</span><span style="font:700 9.5px/1 'IBM Plex Sans';letter-spacing:.04em;text-transform:uppercase;color:#B5453A;background:#FBEDEB;padding:3px 7px;border-radius:5px">Obligatoria</span></div><div style="font:400 11.5px/1.4 'IBM Plex Sans';color:#7A8AA0;margin-top:5px">Cargas térmicas, diámetros de cañería y caídas de presión. PDF · máx 10 MB.</div></div>
+            </div>
+            <button style="margin-top:13px;width:100%;height:40px;border:none;border-radius:9px;background:#0B3D91;color:#fff;font:600 12.5px/1 'IBM Plex Sans';cursor:pointer">Seleccionar archivo</button>
+          </div>
+
+          <!-- optional docs -->
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div style="display:flex;align-items:center;gap:12px;border:1px solid #E2E9F4;border-radius:10px;padding:13px 15px">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#5A6B82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h7l3 3V17a.5.5 0 0 1-.5.5h-9A.5.5 0 0 1 5 17V2.5Z"/><path d="M7.5 10h5M7.5 13h5"/></svg>
+              <div style="flex:1"><div style="font:600 12.5px/1.1 'IBM Plex Sans'">Plano isométrico</div></div>
+              <span style="font:600 11.5px/1 'IBM Plex Sans';color:#0B3D91">Adjuntar</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;border:1px solid #E2E9F4;border-radius:10px;padding:13px 15px">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#5A6B82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h7l3 3V17a.5.5 0 0 1-.5.5h-9A.5.5 0 0 1 5 17V2.5Z"/><path d="M7.5 10h5M7.5 13h5"/></svg>
+              <div style="flex:1"><div style="font:600 12.5px/1.1 'IBM Plex Sans'">Especificaciones técnicas (EETT)</div></div>
+              <span style="font:600 11.5px/1 'IBM Plex Sans';color:#0B3D91">Adjuntar</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;border:1px solid #E2E9F4;border-radius:10px;padding:13px 15px">
+              <svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#5A6B82" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5h7l3 3V17a.5.5 0 0 1-.5.5h-9A.5.5 0 0 1 5 17V2.5Z"/><path d="M7.5 10h5M7.5 13h5"/></svg>
+              <div style="flex:1"><div style="font:600 12.5px/1.1 'IBM Plex Sans'">Protocolo de prueba de hermeticidad</div></div>
+              <span style="font:600 11.5px/1 'IBM Plex Sans';color:#0B3D91">Adjuntar</span>
+            </div>
+          </div>
+        </div>
+        <!-- footer -->
+        <div style="display:flex;gap:11px;padding:16px 22px;border-top:1px solid #EDF1F8;background:#FbFcFe">
+          <button style="height:44px;padding:0 18px;border:1.5px solid #CDD9EE;background:#fff;border-radius:10px;font:600 13px/1 'IBM Plex Sans';color:#5A6B82;cursor:pointer">Atrás</button>
+          <button style="flex:1;height:44px;border:none;border-radius:10px;background:#0B3D91;color:#fff;font:600 13.5px/1 'Archivo',sans-serif;cursor:pointer">Crear instalación</button>
+        </div>
+      </div>
+      <div style="margin-top:14px;font:400 12px/1.5 'IBM Plex Sans';color:#7A8AA0">Un paso por pantalla, barra de progreso. Bloquea "Crear" si falta la memoria de cálculo. Menos abrumador en pantallas chicas.</div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- OPCIÓN B — PÁGINA ÚNICA CON SECCIONES -->
+    <!-- ============================================================= -->
+    <div style="flex:none;width:560px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;background:#0B3D91;color:#fff;font:800 13px/1 'Archivo',sans-serif">B</span>
+        <div><div style="font:700 15px/1.1 'Archivo',sans-serif">Página única por secciones</div><div style="font:400 12px/1.3 'IBM Plex Sans';color:#7A8AA0">Todo a la vista · contenido completo</div></div>
+      </div>
+
+      <div style="background:#fff;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden;border:1px solid #E7EDF6">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 22px;border-bottom:1px solid #EDF1F8">
+          <div><div style="font:800 17px/1 'Archivo',sans-serif">Nueva instalación</div><div style="font:400 12px/1.3 'IBM Plex Sans';color:#7A8AA0;margin-top:4px">Completa los datos del proyecto</div></div>
+          <div style="width:30px;height:30px;border-radius:8px;background:#F4F7FC;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8593A8" stroke-width="1.8" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></div>
+        </div>
+
+        <div style="padding:22px">
+          <!-- SECCIÓN 1 -->
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:#EAF0FB;color:#0B3D91;font:700 11px/1 'Archivo'">1</span><span style="font:700 13.5px/1 'Archivo',sans-serif">Cliente e inmueble</span></div>
+          <div style="display:flex;flex-direction:column;gap:13px;margin-bottom:24px">
+            <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Cliente / razón social</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#1F2D40">Familia Rojas</div></div>
+            <div style="display:flex;gap:11px">
+              <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Teléfono / WhatsApp</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#AAB6C8">+56 9 ____ ____</div></div>
+              <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Email</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#AAB6C8">cliente@correo.cl</div></div>
+            </div>
+            <div style="display:flex;gap:11px">
+              <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">RUT</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#AAB6C8">12.345.678-9</div></div>
+              <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Tipo de inmueble</label><div style="display:flex;height:42px;padding:3px;border-radius:9px;background:#EFF3FA;border:1px solid #E2E9F4"><span style="flex:1;display:flex;align-items:center;justify-content:center;border-radius:6px;background:#0B3D91;color:#fff;font:600 11px/1 'IBM Plex Sans'">Resid.</span><span style="flex:1;display:flex;align-items:center;justify-content:center;font:600 11px/1 'IBM Plex Sans';color:#5A6B82">Comerc.</span><span style="flex:1;display:flex;align-items:center;justify-content:center;font:600 11px/1 'IBM Plex Sans';color:#5A6B82">Indust.</span></div></div>
+            </div>
+            <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Dirección</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#1F2D40">Av. Providencia 1240</div></div>
+            <div style="display:flex;gap:11px">
+              <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Comuna</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#1F2D40">Providencia<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8593A8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></div></div>
+              <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Región</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#1F2D40">Metropolitana<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8593A8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></div></div>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px;border:1px dashed #CDD9EE;border-radius:9px;padding:11px 13px;background:#F7FAFE"><svg width="17" height="17" viewBox="0 0 20 20" fill="none" stroke="#0B3D91" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M10 18s6-5.2 6-9.5A6 6 0 1 0 4 8.5C4 12.8 10 18 10 18Z"/><circle cx="10" cy="8.5" r="2"/></svg><span style="flex:1;font:500 12px/1 'IBM Plex Sans';color:#3A475C">Marcar ubicación en el mapa</span><span style="font:600 11.5px/1 'IBM Plex Sans';color:#0B3D91">Fijar pin</span></div>
+          </div>
+
+          <!-- SECCIÓN 2 -->
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:#EAF0FB;color:#0B3D91;font:700 11px/1 'Archivo'">2</span><span style="font:700 13.5px/1 'Archivo',sans-serif">Trámite SEC</span></div>
+          <div style="display:flex;flex-direction:column;gap:13px;margin-bottom:24px">
+            <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Tipo de trámite</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#1F2D40"><span><b style="color:#0B3D91">TC6</b> · Instalaciones interiores de gas</span><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8593A8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></div></div>
+            <div style="display:flex;gap:11px">
+              <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Tipo de gas</label><div style="display:flex;height:42px;padding:3px;border-radius:9px;background:#EFF3FA;border:1px solid #E2E9F4"><span style="flex:1;display:flex;align-items:center;justify-content:center;border-radius:6px;background:#0B3D91;color:#fff;font:600 11.5px/1 'IBM Plex Sans'">GN</span><span style="flex:1;display:flex;align-items:center;justify-content:center;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82">GLP</span></div></div>
+              <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">N° cilindros GLP</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#AAB6C8">— (solo GLP)</div></div>
+            </div>
+          </div>
+
+          <!-- SECCIÓN 3 -->
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:#EAF0FB;color:#0B3D91;font:700 11px/1 'Archivo'">3</span><span style="font:700 13.5px/1 'Archivo',sans-serif">Datos técnicos</span></div>
+          <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:24px">
+            <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Potencia instalada (kcal/h)</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#AAB6C8">Ej: 24.000</div></div>
+            <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">N° de artefactos</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#AAB6C8">Ej: 3</div></div>
+            <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Presión de servicio (mbar)</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#AAB6C8">Ej: 28</div></div>
+            <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Material de cañería</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#1F2D40">Cobre<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8593A8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></div></div>
+          </div>
+
+          <!-- SECCIÓN 4 -->
+          <div style="display:flex;align-items:center;gap:9px;margin-bottom:14px"><span style="display:inline-flex;align-items:center;justify-content:center;width:22px;height:22px;border-radius:6px;background:#EAF0FB;color:#0B3D91;font:700 11px/1 'Archivo'">4</span><span style="font:700 13.5px/1 'Archivo',sans-serif">Documentación</span></div>
+          <div style="border:1.5px solid #EFE2C6;border-radius:10px;background:#FBF7EE;padding:14px;margin-bottom:11px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:10px"><div style="display:flex;align-items:center;gap:8px"><span style="font:700 13px/1.2 'IBM Plex Sans'">Memoria de cálculo</span><span style="font:700 9.5px/1 'IBM Plex Sans';letter-spacing:.04em;text-transform:uppercase;color:#B5453A;background:#FBEDEB;padding:3px 7px;border-radius:5px">Obligatoria</span></div><button style="height:34px;padding:0 13px;border:none;border-radius:8px;background:#0B3D91;color:#fff;font:600 12px/1 'IBM Plex Sans';cursor:pointer">Adjuntar PDF</button></div>
+            <div style="font:400 11.5px/1.4 'IBM Plex Sans';color:#7A5C16;margin-top:8px">Cargas térmicas, longitudes equivalentes y caídas de presión. Sin ella no se puede declarar en e-Declarador.</div>
+          </div>
+          <div style="display:flex;gap:9px"><div style="flex:1;border:1px solid #E2E9F4;border-radius:9px;padding:10px 12px;font:600 11.5px/1.3 'IBM Plex Sans';color:#5A6B82">Plano isométrico</div><div style="flex:1;border:1px solid #E2E9F4;border-radius:9px;padding:10px 12px;font:600 11.5px/1.3 'IBM Plex Sans';color:#5A6B82">EETT</div><div style="flex:1;border:1px solid #E2E9F4;border-radius:9px;padding:10px 12px;font:600 11.5px/1.3 'IBM Plex Sans';color:#5A6B82">Hermeticidad</div></div>
+        </div>
+
+        <div style="display:flex;gap:11px;padding:16px 22px;border-top:1px solid #EDF1F8;background:#FbFcFe">
+          <button style="height:44px;padding:0 18px;border:1.5px solid #CDD9EE;background:#fff;border-radius:10px;font:600 13px/1 'IBM Plex Sans';color:#5A6B82;cursor:pointer">Cancelar</button>
+          <button style="flex:1;height:44px;border:none;border-radius:10px;background:#0B3D91;color:#fff;font:600 13.5px/1 'Archivo',sans-serif;cursor:pointer">Crear instalación</button>
+        </div>
+      </div>
+      <div style="margin-top:14px;font:400 12px/1.5 'IBM Plex Sans';color:#7A8AA0">Todo el formulario visible y scrolleable. Rápido para usuarios expertos que repiten el flujo. Es el catálogo completo de campos.</div>
+    </div>
+
+    <!-- ============================================================= -->
+    <!-- OPCIÓN C — DIVIDIDO CON RESUMEN EN VIVO -->
+    <!-- ============================================================= -->
+    <div style="flex:none;width:780px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px">
+        <span style="display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;border-radius:7px;background:#0B3D91;color:#fff;font:800 13px/1 'Archivo',sans-serif">C</span>
+        <div><div style="font:700 15px/1.1 'Archivo',sans-serif">Dividido con resumen en vivo</div><div style="font:400 12px/1.3 'IBM Plex Sans';color:#7A8AA0">Navegación + checklist · ideal para escritorio</div></div>
+      </div>
+
+      <div style="background:#fff;border-radius:4px;box-shadow:0 1px 3px rgba(0,0,0,.08);overflow:hidden;border:1px solid #E7EDF6">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:18px 24px;border-bottom:1px solid #EDF1F8">
+          <div style="font:800 17px/1 'Archivo',sans-serif">Nueva instalación</div>
+          <div style="width:30px;height:30px;border-radius:8px;background:#F4F7FC;display:flex;align-items:center;justify-content:center"><svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8593A8" stroke-width="1.8" stroke-linecap="round"><path d="M4 4l8 8M12 4l-8 8"/></svg></div>
+        </div>
+
+        <div style="display:flex">
+          <!-- left nav -->
+          <div style="flex:none;width:190px;border-right:1px solid #EDF1F8;padding:18px 14px;display:flex;flex-direction:column;gap:4px">
+            <div style="display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border-radius:9px;background:#EAF0FB"><span style="width:8px;height:8px;border-radius:50%;background:#0B3D91"></span><span style="font:600 12.5px/1 'IBM Plex Sans';color:#0B3D91">Cliente e inmueble</span></div>
+            <div style="display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border-radius:9px"><span style="width:8px;height:8px;border-radius:50%;background:#C9D4E6"></span><span style="font:500 12.5px/1 'IBM Plex Sans';color:#5A6B82">Trámite SEC</span></div>
+            <div style="display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border-radius:9px"><span style="width:8px;height:8px;border-radius:50%;background:#C9D4E6"></span><span style="font:500 12.5px/1 'IBM Plex Sans';color:#5A6B82">Datos técnicos</span></div>
+            <div style="display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border-radius:9px"><span style="width:8px;height:8px;border-radius:50%;background:#D98A0B"></span><span style="font:500 12.5px/1 'IBM Plex Sans';color:#5A6B82">Documentación</span></div>
+          </div>
+
+          <!-- center fields (sección Cliente) -->
+          <div style="flex:1;padding:22px 24px">
+            <div style="font:800 15px/1.2 'Archivo',sans-serif;margin-bottom:4px">Cliente e inmueble</div>
+            <div style="font:400 12px/1.4 'IBM Plex Sans';color:#7A8AA0;margin-bottom:18px">Paso 1 de 4</div>
+            <div style="display:flex;flex-direction:column;gap:13px">
+              <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Cliente / razón social</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#1F2D40">Familia Rojas</div></div>
+              <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">RUT</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#AAB6C8">12.345.678-9</div></div>
+              <div style="display:flex;gap:11px">
+                <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Teléfono / WhatsApp</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#AAB6C8">+56 9 ____ ____</div></div>
+                <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Email</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#AAB6C8">cliente@correo.cl</div></div>
+              </div>
+              <div><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Dirección</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#1F2D40">Av. Providencia 1240</div></div>
+              <div style="display:flex;gap:11px">
+                <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Comuna</label><div style="height:42px;border:1px solid #D9E2F0;border-radius:9px;display:flex;align-items:center;justify-content:space-between;padding:0 13px;font:400 13px/1 'IBM Plex Sans';color:#1F2D40">Providencia<svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#8593A8" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6l4 4 4-4"/></svg></div></div>
+                <div style="flex:1"><label style="display:block;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82;margin-bottom:7px">Tipo de inmueble</label><div style="display:flex;height:42px;padding:3px;border-radius:9px;background:#EFF3FA;border:1px solid #E2E9F4"><span style="flex:1;display:flex;align-items:center;justify-content:center;border-radius:6px;background:#0B3D91;color:#fff;font:600 10.5px/1 'IBM Plex Sans'">Resid.</span><span style="flex:1;display:flex;align-items:center;justify-content:center;font:600 10.5px/1 'IBM Plex Sans';color:#5A6B82">Com.</span><span style="flex:1;display:flex;align-items:center;justify-content:center;font:600 10.5px/1 'IBM Plex Sans';color:#5A6B82">Ind.</span></div></div>
+              </div>
+              <div style="height:120px;border:1px solid #E2E9F4;border-radius:10px;background:#EAF0FB;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center"><span style="font:500 11.5px/1 'IBM Plex Sans';color:#5A77A8">Mapa · arrastra el pin para fijar la ubicación</span><span style="position:absolute;left:50%;top:50%;transform:translate(-50%,-100%);width:18px;height:18px;border-radius:50%;background:#0B3D91;border:3px solid #fff;box-shadow:0 3px 8px rgba(8,30,80,.4)"></span></div>
+            </div>
+            <div style="display:flex;justify-content:flex-end;margin-top:20px"><button style="height:42px;padding:0 20px;border:none;border-radius:10px;background:#0B3D91;color:#fff;font:600 13px/1 'Archivo',sans-serif;cursor:pointer">Siguiente: Trámite SEC →</button></div>
+          </div>
+
+          <!-- right summary -->
+          <div style="flex:none;width:230px;border-left:1px solid #EDF1F8;background:#F7FAFE;padding:20px 18px">
+            <div style="font:700 12px/1 'Archivo',sans-serif;letter-spacing:.04em;text-transform:uppercase;color:#0B3D91;margin-bottom:14px">Resumen</div>
+            <div style="margin-bottom:8px;font:600 11.5px/1 'IBM Plex Sans';color:#5A6B82">Completitud</div>
+            <div style="height:7px;border-radius:6px;background:#E2E9F4;overflow:hidden;margin-bottom:18px"><div style="height:100%;width:40%;background:#0B3D91"></div></div>
+            <div style="display:flex;flex-direction:column;gap:11px">
+              <div style="display:flex;align-items:center;gap:9px"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#1A8F5B;color:#fff;font-size:10px">✓</span><span style="font:500 12px/1.2 'IBM Plex Sans';color:#33414F">Cliente e inmueble</span></div>
+              <div style="display:flex;align-items:center;gap:9px"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid #C9D4E6"></span><span style="font:500 12px/1.2 'IBM Plex Sans';color:#8593A8">Trámite SEC</span></div>
+              <div style="display:flex;align-items:center;gap:9px"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;border:1.5px solid #C9D4E6"></span><span style="font:500 12px/1.2 'IBM Plex Sans';color:#8593A8">Datos técnicos</span></div>
+              <div style="display:flex;align-items:flex-start;gap:9px"><span style="flex:none;display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;border-radius:50%;background:#FBF1DD;color:#B9821B;font-size:11px">!</span><div><span style="font:600 12px/1.2 'IBM Plex Sans';color:#7A5C16">Memoria de cálculo</span><div style="font:400 10.5px/1.3 'IBM Plex Sans';color:#B9821B;margin-top:2px">Pendiente · obligatoria</div></div></div>
+            </div>
+            <div style="margin-top:20px;padding-top:16px;border-top:1px solid #E2E9F4">
+              <button style="width:100%;height:42px;border:none;border-radius:10px;background:#C7D0DE;color:#fff;font:600 12.5px/1 'Archivo',sans-serif;cursor:not-allowed">Crear instalación</button>
+              <div style="font:400 10.5px/1.4 'IBM Plex Sans';color:#8593A8;margin-top:8px;text-align:center">Se habilita al adjuntar la memoria de cálculo</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="margin-top:14px;font:400 12px/1.5 'IBM Plex Sans';color:#7A8AA0">Navegación lateral por secciones + panel de resumen con % de avance y checklist. El botón "Crear" se mantiene bloqueado hasta adjuntar la memoria de cálculo. El más completo para escritorio.</div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+</body>
+</html>
